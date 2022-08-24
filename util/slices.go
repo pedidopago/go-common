@@ -1,7 +1,5 @@
 package util
 
-import "fmt"
-
 func ToInterfaces[T any](s []T) []interface{} {
 	if0 := make([]interface{}, len(s))
 	for i, v := range s {
@@ -18,13 +16,15 @@ func ToSliceIfNotZero[T comparable](v T) []T {
 	return []T{v}
 }
 
-func FirstElemOrErr[T any](v []T, err error) (T, error) {
-	var zv T
-	if err != nil {
-		return zv, err
+func FirstElemOrErr[T any](emptyErr error) func(v []T, err error) (T, error) {
+	return func(v []T, err error) (T, error) {
+		var zv T
+		if err != nil {
+			return zv, err
+		}
+		if len(v) == 0 {
+			return zv, emptyErr
+		}
+		return v[0], nil
 	}
-	if len(v) == 0 {
-		return zv, fmt.Errorf("empty slice")
-	}
-	return v[0], nil
 }
