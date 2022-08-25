@@ -3,6 +3,7 @@ package mariadb
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
@@ -92,6 +93,19 @@ func SWhereOneOrMany[T comparable](b squirrel.SelectBuilder, col string, vals []
 	}
 	if len(vals) > 1 {
 		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), util.ToInterfaces(vals)...)
+	}
+	return b.Where(fmt.Sprintf("%s = ?", col), vals[0])
+}
+
+func SWhereOneOrManyLike(b squirrel.SelectBuilder, col string, vals []string) squirrel.SelectBuilder {
+	if len(vals) == 0 {
+		return b
+	}
+	if len(vals) > 1 {
+		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), util.ToInterfaces(vals)...)
+	}
+	if strings.HasPrefix(vals[0], "%") || strings.HasSuffix(vals[0], "%") {
+		return b.Where(fmt.Sprintf("%s LIKE ?", col), vals[0])
 	}
 	return b.Where(fmt.Sprintf("%s = ?", col), vals[0])
 }
