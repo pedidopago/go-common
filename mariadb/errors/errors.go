@@ -54,3 +54,9 @@ func WrapSQLX(original error) error {
 func Is(err error, target error) bool {
 	return errors.Is(err, target)
 }
+
+// New returns an error that formats as the given text. Each call to New returns
+// a distinct error value even if the text is identical.
+func New(text string) error {
+	return errors.New(text)
+}
