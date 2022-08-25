@@ -2,10 +2,12 @@ package mariadb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	"github.com/pedidopago/go-common/mariadb/errors"
+	"github.com/pedidopago/go-common/util"
 )
 
 type Selector interface {
@@ -82,4 +84,14 @@ func LimitOne(ctx context.Context) context.Context {
 
 func LimitX(ctx context.Context, v uint64) context.Context {
 	return context.WithValue(ctx, CtxLimit, v)
+}
+
+func SWhereOneOrMany[T comparable](b squirrel.SelectBuilder, col string, vals []T) squirrel.SelectBuilder {
+	if len(vals) == 0 {
+		return b
+	}
+	if len(vals) > 1 {
+		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), util.ToInterfaces(vals)...)
+	}
+	return b.Where(fmt.Sprintf("%s = ?", col), vals[0])
 }
