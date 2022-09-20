@@ -5,6 +5,8 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"time"
+
+	"github.com/pedidopago/echo-openapi/openapi"
 )
 
 type NullInt64 struct {
@@ -51,6 +53,12 @@ func (ns *NullInt64) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.Int64)
 }
 
+func (ns NullInt64) HydrateSchemaObject(schema *openapi.SchemaObject) {
+	schema.Type = "integer"
+	schema.Format = "int64"
+	schema.Description = "nullable int64"
+}
+
 type NullString struct {
 	String string
 	Valid  bool // Valid is true if String is not NULL
@@ -95,6 +103,11 @@ func (ns *NullString) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.String)
 }
 
+func (ns NullString) HydrateSchemaObject(schema *openapi.SchemaObject) {
+	schema.Type = "string"
+	schema.Description = "nullable string"
+}
+
 type NullTime struct {
 	Time  time.Time
 	Valid bool // Valid is true if Time is not NULL
@@ -137,4 +150,9 @@ func (ns *NullTime) UnmarshalJSON(data []byte) error {
 	}
 	ns.Valid = true
 	return json.Unmarshal(data, &ns.Time)
+}
+
+func (ns NullTime) HydrateSchemaObject(schema *openapi.SchemaObject) {
+	schema.Type = "string"
+	schema.Description = "nullable RFC3339 date-time"
 }
