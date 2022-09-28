@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pedidopago/go-common/mariadb/errors"
 	"github.com/pedidopago/go-common/util"
+	"golang.org/x/exp/constraints"
 )
 
 type Selector interface {
@@ -53,6 +54,24 @@ func SelectOne[T any](ctx context.Context, db sqlx.ExtContext, input Selector) (
 	}
 	p0 := items[0]
 	return p0, nil
+}
+
+func SelectCount[T constraints.Ordered](ctx context.Context, db sqlx.QueryerContext, input Selector) (T, error) {
+	var zv T
+	if err := input.ValidateFields(); err != nil {
+		return zv, err
+	}
+	b := squirrel.Select("COUNT(*)").From(input.TableName())
+	b = input.ApplyToSquirrel(b)
+	q, args, err := b.ToSql()
+	if err != nil {
+		return zv, errors.InvalidQuery(err)
+	}
+	var count T
+	if err := db.QueryRowxContext(ctx, q, args...).Scan(&count); err != nil {
+		return zv, errors.WrapSQLX(err)
+	}
+	return count, nil
 }
 
 func unsafedb(db sqlx.ExtContext) sqlx.ExtContext {
