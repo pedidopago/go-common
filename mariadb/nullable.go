@@ -156,3 +156,10 @@ func (ns NullTime) HydrateSchemaObject(schema *openapi.SchemaObject) {
 	schema.Type = "string"
 	schema.Description = "nullable RFC3339 date-time"
 }
+
+func (ns NullTime) ToTimePtr() *time.Time {
+	if !ns.Valid {
+		return nil
+	}
+	return &ns.Time
+}
