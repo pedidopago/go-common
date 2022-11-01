@@ -9,6 +9,10 @@ import (
 	"net/http"
 )
 
+type WebLogger interface {
+	Log(msg string, args ...interface{})
+}
+
 type DoRequestInput struct {
 	Input       any
 	Output      any
@@ -16,6 +20,7 @@ type DoRequestInput struct {
 	Method      string
 	RequestFunc func(*http.Request) error
 	Client      *http.Client
+	Logger      WebLogger
 }
 
 func DoRequest(ctx context.Context, d DoRequestInput) error {
@@ -41,6 +46,9 @@ func DoRequest(ctx context.Context, d DoRequestInput) error {
 	if d.RequestFunc != nil {
 		if err := d.RequestFunc(req); err != nil {
 			return fmt.Errorf("request func: %w", err)
+		}
+		if d.Logger != nil {
+			d.Logger.Log("with request func")
 		}
 	}
 	resp, err := d.Client.Do(req)
