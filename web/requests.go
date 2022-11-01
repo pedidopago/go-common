@@ -17,6 +17,7 @@ type DoRequestInput struct {
 	URL         string
 	Method      string
 	RequestFunc func(*http.Request) error
+	Headers     map[string][]string
 	Client      *http.Client
 	Logger      WebLogger
 }
@@ -46,7 +47,15 @@ func DoRequest(ctx context.Context, d DoRequestInput) error {
 			return fmt.Errorf("request func: %w", err)
 		}
 		if d.Logger != nil {
-			d.Logger("with request func")
+			d.Logger("with request func headers %v", req.Header)
+		}
+	}
+	if d.Headers != nil {
+		for k, v := range d.Headers {
+			req.Header[k] = v
+		}
+		if d.Logger != nil {
+			d.Logger("with headers %v", req.Header)
 		}
 	}
 	resp, err := d.Client.Do(req)
