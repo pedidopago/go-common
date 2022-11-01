@@ -34,6 +34,9 @@ func DoRequest(ctx context.Context, d DoRequestInput) error {
 		}
 		rdr = bytes.NewReader(d)
 	}
+	if d.Method == "" {
+		d.Method = http.MethodGet
+	}
 	req, err := http.NewRequest(d.Method, d.URL, rdr)
 	if err != nil {
 		return fmt.Errorf("new request: %w", err)
@@ -66,8 +69,10 @@ func DoRequest(ctx context.Context, d DoRequestInput) error {
 	if resp.StatusCode != http.StatusOK {
 		return ErrorFromResponse(ctx, resp)
 	}
-	if err := json.NewDecoder(resp.Body).Decode(d.Output); err != nil {
-		return fmt.Errorf("decode response: %w", err)
+	if d.Output != nil {
+		if err := json.NewDecoder(resp.Body).Decode(d.Output); err != nil {
+			return fmt.Errorf("decode response: %w", err)
+		}
 	}
 	return nil
 }
