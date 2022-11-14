@@ -28,3 +28,10 @@ func FirstElemOrErr[T any](emptyErr error) func(v []T, err error) (T, error) {
 		return v[0], nil
 	}
 }
+
+func BytesToStringErr(v []byte, err error) (string, error) {
+	if err != nil {
+		return "", err
+	}
+	return string(v), nil
+}
