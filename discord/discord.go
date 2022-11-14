@@ -16,6 +16,7 @@ type NewWebhookMessageInput struct {
 	Content  string
 	Username string
 	Logs     string
+	Filename string
 }
 
 func NewWebhookMessage(input NewWebhookMessageInput) error {
@@ -47,7 +48,11 @@ func NewWebhookMessage(input NewWebhookMessageInput) error {
 	}
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
-	ww, _ := writer.CreateFormFile("file1", "output_log.txt")
+	filename := "output.txt"
+	if input.Filename != "" {
+		filename = input.Filename
+	}
+	ww, _ := writer.CreateFormFile("file1", filename)
 	io.Copy(ww, strings.NewReader(input.Logs))
 	ddata := struct {
 		Content  string `json:"content"`
