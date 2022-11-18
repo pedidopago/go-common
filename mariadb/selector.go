@@ -34,6 +34,9 @@ func SelectMany[T any](ctx context.Context, db sqlx.ExtContext, input Selector) 
 			b = b.Offset((page - 1) * limit)
 		}
 	}
+	if oby, ok := withOrderBy(ctx); ok {
+		b = b.OrderBy(oby...)
+	}
 	q, args, err := b.ToSql()
 	if err != nil {
 		return nil, errors.InvalidQuery(err)
@@ -106,11 +109,23 @@ func withPage(ctx context.Context) (uint64, bool) {
 	return page.(uint64), true
 }
 
+func withOrderBy(ctx context.Context) ([]string, bool) {
+	if ctx == nil {
+		return nil, false
+	}
+	page := ctx.Value(CtxPage)
+	if page == nil {
+		return nil, false
+	}
+	return page.([]string), true
+}
+
 type ContextVar string
 
 const (
-	CtxLimit ContextVar = "model_limit"
-	CtxPage  ContextVar = "model_page"
+	CtxLimit   ContextVar = "model_limit"
+	CtxPage    ContextVar = "model_page"
+	CtxOrderBy ContextVar = "model_order_by"
 )
 
 func LimitOne(ctx context.Context) context.Context {
@@ -123,6 +138,10 @@ func LimitX(ctx context.Context, v uint64) context.Context {
 
 func PageX(ctx context.Context, v uint64) context.Context {
 	return context.WithValue(ctx, CtxPage, v)
+}
+
+func OrderByX(ctx context.Context, items ...string) context.Context {
+	return context.WithValue(ctx, CtxOrderBy, items)
 }
 
 func SWhereOneOrMany[T comparable](b squirrel.SelectBuilder, col string, vals []T) squirrel.SelectBuilder {
