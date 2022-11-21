@@ -113,7 +113,7 @@ func withOrderBy(ctx context.Context) ([]string, bool) {
 	if ctx == nil {
 		return nil, false
 	}
-	page := ctx.Value(CtxPage)
+	page := ctx.Value(CtxOrderBy)
 	if page == nil {
 		return nil, false
 	}
