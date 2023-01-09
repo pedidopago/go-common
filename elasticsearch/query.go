@@ -1,4 +1,4 @@
-package elastic
+package elasticsearch
 
 type Search struct {
 	From  uint64 `json:"from"`
@@ -9,6 +9,12 @@ type Search struct {
 
 func (s *Search) Q() *Query {
 	return &s.Query
+}
+
+func (s *Search) AppendSort(name string, params map[string]any) {
+	s.Sort = append(s.Sort, map[string]any{
+		name: params,
+	})
 }
 
 type Query struct {
