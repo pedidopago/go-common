@@ -18,13 +18,20 @@ func (s *Search) AppendSort(name string, params map[string]any) {
 }
 
 type Query struct {
-	Bool SearchBool `json:"bool"`
+	Bool     SearchBool     `json:"bool,omitempty"`
+	Boosting SearchBoosting `json:"boosting,omitempty"`
 }
 
 type SearchBool struct {
 	Must   []map[string]any `json:"must,omitempty"`
 	Filter []map[string]any `json:"filter,omitempty"`
 	Should []map[string]any `json:"should,omitempty"`
+}
+
+type SearchBoosting struct {
+	Positive      map[string]any `json:"positive,omitempty"`
+	Negative      map[string]any `json:"negative,omitempty"`
+	NegativeBoost float64        `json:"negative_boost"`
 }
 
 type Range map[string]any
