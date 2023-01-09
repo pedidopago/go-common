@@ -96,7 +96,7 @@ func BoolFilterTerm[T any](q *Query, fieldName string, value T) {
 	})
 }
 
-func BoolMustRange[T any](q *Query, fieldName string, rng Range) {
+func BoolMustRange(q *Query, fieldName string, rng Range) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
 	}
@@ -107,7 +107,7 @@ func BoolMustRange[T any](q *Query, fieldName string, rng Range) {
 	})
 }
 
-func BoolFilterRange[T any](q *Query, fieldName string, rng Range) {
+func BoolFilterRange(q *Query, fieldName string, rng Range) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
 	}
