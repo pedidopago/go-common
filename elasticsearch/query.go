@@ -41,6 +41,9 @@ func RangeLte[T any](s Range, value T) {
 	s["lte"] = value
 }
 
+// Term is an exact query
+// Match is a fuzzy query
+
 func BoolMustMatch[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
