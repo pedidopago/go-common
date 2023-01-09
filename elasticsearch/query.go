@@ -24,6 +24,7 @@ type Query struct {
 type SearchBool struct {
 	Must   []map[string]any `json:"must,omitempty"`
 	Filter []map[string]any `json:"filter,omitempty"`
+	Should []map[string]any `json:"should,omitempty"`
 }
 
 type Range map[string]any
@@ -161,5 +162,29 @@ func BoolFilterRanges[T any](q *Query, ranges map[string]Range) {
 	}
 	q.Bool.Filter = append(q.Bool.Filter, map[string]any{
 		"range": ranges,
+	})
+}
+
+//
+
+func BoolShouldMatch[T any](q *Query, fieldName string, value T) {
+	if q.Bool.Should == nil {
+		q.Bool.Should = []map[string]any{}
+	}
+	q.Bool.Should = append(q.Bool.Should, map[string]any{
+		"match": map[string]any{
+			fieldName: value,
+		},
+	})
+}
+
+func BoolShouldTerm[T any](q *Query, fieldName string, value T) {
+	if q.Bool.Should == nil {
+		q.Bool.Should = []map[string]any{}
+	}
+	q.Bool.Should = append(q.Bool.Should, map[string]any{
+		"term": map[string]any{
+			fieldName: value,
+		},
 	})
 }
