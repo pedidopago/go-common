@@ -141,3 +141,17 @@ func BoolShouldTerm[T any](q *Query, fieldName string, value T) {
 		},
 	})
 }
+
+//
+
+func NewOrderDesc() map[string]string {
+	return map[string]string{
+		"order": "desc",
+	}
+}
+
+func NewOrderAsc() map[string]string {
+	return map[string]string{
+		"order": "asc",
+	}
+}
