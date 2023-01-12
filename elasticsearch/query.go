@@ -1,10 +1,10 @@
 package elasticsearch
 
 type Search struct {
-	From  uint64 `json:"from"`
-	Size  uint64 `json:"size"`
+	From  uint64 `json:"from,omitempty"`
+	Size  uint64 `json:"size,omitempty"`
 	Query Query  `json:"query"`
-	Sort  []any  `json:"sort"`
+	Sort  []any  `json:"sort,omitempty"`
 }
 
 func (s *Search) Q() *Query {
@@ -18,8 +18,8 @@ func (s *Search) AppendSort(name string, params map[string]any) {
 }
 
 type Query struct {
-	Bool     SearchBool     `json:"bool,omitempty"`
-	Boosting SearchBoosting `json:"boosting,omitempty"`
+	Bool     SearchBool      `json:"bool,omitempty"`
+	Boosting *SearchBoosting `json:"boosting,omitempty"`
 }
 
 type SearchBool struct {
@@ -31,7 +31,7 @@ type SearchBool struct {
 type SearchBoosting struct {
 	Positive      map[string]any `json:"positive,omitempty"`
 	Negative      map[string]any `json:"negative,omitempty"`
-	NegativeBoost float64        `json:"negative_boost"`
+	NegativeBoost float64        `json:"negative_boost,omitempty"`
 }
 
 type Range map[string]any
