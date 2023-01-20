@@ -15,6 +15,11 @@ const qcomparison = `{
 					"term": {
 						"account_id": 1
 					}
+				},
+				{
+					"term": {
+						"store_id": "WABA"
+					}
 				}
 			]
 		}
@@ -22,8 +27,9 @@ const qcomparison = `{
 }`
 
 func TestQuery(t *testing.T) {
-	s := Search{}
+	s := &Search{}
 	BoolFilterTerm(s.Q(), "account_id", 1)
+	BoolFilterTerm(s.Q(), "store_id", "WABA")
 	jb, err := json.MarshalIndent(s, "", "	")
 	assert.NoError(t, err)
 	assert.Equal(t, qcomparison, string(jb))

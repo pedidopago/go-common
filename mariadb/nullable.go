@@ -5,9 +5,13 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"time"
-
-	"github.com/pedidopago/echo-openapi/openapi"
 )
+
+type OpenAPISchemaObject interface {
+	SetType(v string)
+	SetFormat(v string)
+	SetDescription(v string)
+}
 
 type NullInt64 struct {
 	Int64 int64
@@ -53,10 +57,10 @@ func (ns *NullInt64) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.Int64)
 }
 
-func (ns NullInt64) HydrateSchemaObject(schema *openapi.SchemaObject) {
-	schema.Type = "integer"
-	schema.Format = "int64"
-	schema.Description = "nullable int64"
+func (ns NullInt64) HydrateSchemaObject(schema OpenAPISchemaObject) {
+	schema.SetType("integer")
+	schema.SetFormat("int64")
+	schema.SetDescription("nullable int64")
 }
 
 type NullString struct {
@@ -103,9 +107,9 @@ func (ns *NullString) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.String)
 }
 
-func (ns NullString) HydrateSchemaObject(schema *openapi.SchemaObject) {
-	schema.Type = "string"
-	schema.Description = "nullable string"
+func (ns NullString) HydrateSchemaObject(schema OpenAPISchemaObject) {
+	schema.SetType("string")
+	schema.SetDescription("nullable string")
 }
 
 type NullTime struct {
@@ -152,9 +156,9 @@ func (ns *NullTime) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.Time)
 }
 
-func (ns NullTime) HydrateSchemaObject(schema *openapi.SchemaObject) {
-	schema.Type = "string"
-	schema.Description = "nullable RFC3339 date-time"
+func (ns NullTime) HydrateSchemaObject(schema OpenAPISchemaObject) {
+	schema.SetType("string")
+	schema.SetDescription("nullable RFC3339 date-time")
 }
 
 func (ns NullTime) ToTimePtr() *time.Time {
