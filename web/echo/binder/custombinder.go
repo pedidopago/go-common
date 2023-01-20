@@ -21,6 +21,9 @@ type CustomBinder struct {
 // ensure our CustomBinder implements echo.Binder
 var _ echo.Binder = &CustomBinder{}
 
+// ensure CustomBinder implements EchoContextBinder
+var _ EchoContextBinder = &CustomBinder{}
+
 type EchoContextBindUnmarshaler interface {
 	UnmarshalParam(c echo.Context, param string) error
 }
