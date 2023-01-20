@@ -13,8 +13,7 @@ func (x *Cents) FromString(s string) *Cents {
 	if err != nil {
 		return nil
 	}
-	*x = Cents(d.Shift(2).IntPart())
-	return x
+	return x.FromDecimal(&d)
 }
 
 func (x *Cents) FromDecimal(d *decimal.Decimal) *Cents {
