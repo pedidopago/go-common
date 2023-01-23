@@ -151,7 +151,7 @@ func (b *CustomBinder) bindData(c echo.Context, destination interface{}, data ma
 		}
 
 		// Call this first, in case we're dealing with an alias to an array type
-		if ok, err := unmarshalField(c, typeField.Type.Kind(), inputValue[0], structField); ok {
+		if ok, err := unmarshalField(c, typeField.Type.Kind(), inputValue, structField); ok {
 			if err != nil {
 				return err
 			}
@@ -176,7 +176,7 @@ func (b *CustomBinder) bindData(c echo.Context, destination interface{}, data ma
 	return nil
 }
 
-func unmarshalField(c echo.Context, valueKind reflect.Kind, val string, field reflect.Value) (bool, error) {
+func unmarshalField(c echo.Context, valueKind reflect.Kind, val []string, field reflect.Value) (bool, error) {
 	switch valueKind {
 	case reflect.Ptr:
 		return unmarshalFieldPtr(c, val, field)
@@ -185,22 +185,39 @@ func unmarshalField(c echo.Context, valueKind reflect.Kind, val string, field re
 	}
 }
 
-func unmarshalFieldNonPtr(c echo.Context, value string, field reflect.Value) (bool, error) {
+func unmarshalFieldNonPtr(c echo.Context, values []string, field reflect.Value) (bool, error) {
 	fieldIValue := field.Addr().Interface()
+	var callbackFn func(value string) error
 	if unmarshaler, ok := fieldIValue.(EchoContextBindUnmarshaler); ok {
-		return true, unmarshaler.UnmarshalParam(c, value)
+		callbackFn = func(value string) error {
+			return unmarshaler.UnmarshalParam(c, value)
+		}
 	}
 	if unmarshaler, ok := fieldIValue.(echo.BindUnmarshaler); ok {
-		return true, unmarshaler.UnmarshalParam(value)
+		callbackFn = func(value string) error {
+			return unmarshaler.UnmarshalParam(value)
+		}
 	}
 	if unmarshaler, ok := fieldIValue.(encoding.TextUnmarshaler); ok {
-		return true, unmarshaler.UnmarshalText([]byte(value))
+		callbackFn = func(value string) error {
+			return unmarshaler.UnmarshalText([]byte(value))
+		}
 	}
 
-	return false, nil
+	if callbackFn == nil {
+		return false, nil
+	}
+
+	for _, value := range values {
+		if err := callbackFn(value); err != nil {
+			return true, nil
+		}
+	}
+
+	return true, nil
 }
 
-func unmarshalFieldPtr(c echo.Context, value string, field reflect.Value) (bool, error) {
+func unmarshalFieldPtr(c echo.Context, value []string, field reflect.Value) (bool, error) {
 	if field.IsNil() {
 		// Initialize the pointer to a nil value
 		field.Set(reflect.New(field.Type().Elem()))
@@ -210,7 +227,7 @@ func unmarshalFieldPtr(c echo.Context, value string, field reflect.Value) (bool,
 
 func setWithProperType(c echo.Context, valueKind reflect.Kind, val string, structField reflect.Value) error {
 	// But also call it here, in case we're dealing with an array of BindUnmarshalers
-	if ok, err := unmarshalField(c, valueKind, val, structField); ok {
+	if ok, err := unmarshalField(c, valueKind, []string{val}, structField); ok {
 		return err
 	}
 
