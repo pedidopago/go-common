@@ -19,6 +19,7 @@ func (s *Search) AppendSort(name string, params map[string]any) {
 
 type Query struct {
 	Bool     SearchBool      `json:"bool,omitempty"`
+	Wildcard SearchWildcard  `json:"wildcard,omitempty"`
 	Boosting *SearchBoosting `json:"boosting,omitempty"`
 }
 
@@ -35,6 +36,8 @@ type SearchBoosting struct {
 	NegativeBoost float64        `json:"negative_boost,omitempty"`
 }
 
+type SearchWildcard map[string]any
+
 type Range map[string]any
 
 func NewRange() Range {
@@ -48,6 +51,17 @@ func RangeGte[T any](s Range, value T) {
 
 func RangeLte[T any](s Range, value T) {
 	s["lte"] = value
+}
+
+func Wildcard(q *Query, fieldName string, value string) {
+	if q.Wildcard == nil {
+		q.Wildcard = make(map[string]any)
+	}
+	q.Wildcard[fieldName] = map[string]any{
+		"value":   value,
+		"boost":   1.0,
+		"rewrite": "constant_score",
+	}
 }
 
 // Term is an exact query
