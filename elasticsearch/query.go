@@ -23,9 +23,10 @@ type Query struct {
 }
 
 type SearchBool struct {
-	Must   []map[string]any `json:"must,omitempty"`
-	Filter []map[string]any `json:"filter,omitempty"`
-	Should []map[string]any `json:"should,omitempty"`
+	Must    []map[string]any `json:"must,omitempty"`
+	MustNot []map[string]any `json:"must_not,omitempty"`
+	Filter  []map[string]any `json:"filter,omitempty"`
+	Should  []map[string]any `json:"should,omitempty"`
 }
 
 type SearchBoosting struct {
@@ -79,6 +80,17 @@ func BoolMustTerm[T any](q *Query, fieldName string, value T) {
 		q.Bool.Must = []map[string]any{}
 	}
 	q.Bool.Must = append(q.Bool.Must, map[string]any{
+		"term": map[string]any{
+			fieldName: value,
+		},
+	})
+}
+
+func BoolMustNotTerm[T any](q *Query, fieldName string, value T) {
+	if q.Bool.MustNot == nil {
+		q.Bool.MustNot = []map[string]any{}
+	}
+	q.Bool.MustNot = append(q.Bool.MustNot, map[string]any{
 		"term": map[string]any{
 			fieldName: value,
 		},
