@@ -78,6 +78,31 @@ func BoolMustMatch[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+func BoolFilterWildcardDefaults(q *Query, fieldName string, value string) {
+	BoolFilterWildcard(q, fieldName, value, 1.0, "constant_score")
+}
+
+type WildcardStruct struct {
+	Value   string  `json:"value"`
+	Boost   float64 `json:"boost,omitempty"`
+	Rewrite string  `json:"rewrite,omitempty"`
+}
+
+func BoolFilterWildcard(q *Query, fieldName string, value string, boost float64, rewrite string) {
+	if q.Bool.Filter == nil {
+		q.Bool.Filter = []map[string]any{}
+	}
+	q.Bool.Filter = append(q.Bool.Filter, map[string]any{
+		"wildcard": map[string]any{
+			fieldName: WildcardStruct{
+				Value:   value,
+				Boost:   boost,
+				Rewrite: rewrite,
+			},
+		},
+	})
+}
+
 func BoolFilterMatch[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
