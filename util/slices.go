@@ -1,5 +1,7 @@
 package util
 
+import "strings"
+
 func ToInterfaces[T any](s []T) []interface{} {
 	if0 := make([]interface{}, len(s))
 	for i, v := range s {
@@ -34,4 +36,13 @@ func BytesToStringErr(v []byte, err error) (string, error) {
 		return "", err
 	}
 	return string(v), nil
+}
+
+func ContainsAny(s []string, v string) bool {
+	for _, vv := range s {
+		if strings.Contains(vv, v) {
+			return true
+		}
+	}
+	return false
 }
