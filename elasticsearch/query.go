@@ -70,6 +70,10 @@ func BoolFilterWildcardDefaults(q *Query, fieldName string, value string) {
 	BoolFilterWildcard(q, fieldName, value, 1.0, "constant_score")
 }
 
+func BoolShouldWildcardDefaults(q *Query, fieldName string, value string) {
+	BoolShouldWildcard(q, fieldName, value, 1.0, "constant_score")
+}
+
 type WildcardStruct struct {
 	Value   string  `json:"value"`
 	Boost   float64 `json:"boost,omitempty"`
@@ -81,6 +85,21 @@ func BoolFilterWildcard(q *Query, fieldName string, value string, boost float64,
 		q.Bool.Filter = []map[string]any{}
 	}
 	q.Bool.Filter = append(q.Bool.Filter, map[string]any{
+		"wildcard": map[string]any{
+			fieldName: WildcardStruct{
+				Value:   value,
+				Boost:   boost,
+				Rewrite: rewrite,
+			},
+		},
+	})
+}
+
+func BoolShouldWildcard(q *Query, fieldName string, value string, boost float64, rewrite string) {
+	if q.Bool.Should == nil {
+		q.Bool.Should = []map[string]any{}
+	}
+	q.Bool.Should = append(q.Bool.Should, map[string]any{
 		"wildcard": map[string]any{
 			fieldName: WildcardStruct{
 				Value:   value,
