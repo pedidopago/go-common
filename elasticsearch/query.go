@@ -121,6 +121,15 @@ func BoolFilterMatch[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+func BoolMust(q *Query, fieldName string, value any) {
+	if q.Bool.Must == nil {
+		q.Bool.Must = []map[string]any{}
+	}
+	q.Bool.Must = append(q.Bool.Must, map[string]any{
+		fieldName: value,
+	})
+}
+
 func BoolMustTerm[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
