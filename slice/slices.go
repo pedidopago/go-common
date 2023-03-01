@@ -1,8 +1,7 @@
-package util
+package slice
 
 import "strings"
 
-// Deprecated: use slice.ToInterfaces instead
 func ToInterfaces[T any](s []T) []interface{} {
 	if0 := make([]interface{}, len(s))
 	for i, v := range s {
@@ -11,7 +10,6 @@ func ToInterfaces[T any](s []T) []interface{} {
 	return if0
 }
 
-// Deprecated: use slice.ToSliceIfNotZero instead
 func ToSliceIfNotZero[T comparable](v T) []T {
 	var zv T
 	if v == zv {
@@ -20,7 +18,6 @@ func ToSliceIfNotZero[T comparable](v T) []T {
 	return []T{v}
 }
 
-// Deprecated: use slice.FirstElemOrErr instead
 func FirstElemOrErr[T any](emptyErr error) func(v []T, err error) (T, error) {
 	return func(v []T, err error) (T, error) {
 		var zv T
@@ -34,7 +31,6 @@ func FirstElemOrErr[T any](emptyErr error) func(v []T, err error) (T, error) {
 	}
 }
 
-// Deprecated: use slice.BytesToStringErr instead
 func BytesToStringErr(v []byte, err error) (string, error) {
 	if err != nil {
 		return "", err
@@ -42,7 +38,6 @@ func BytesToStringErr(v []byte, err error) (string, error) {
 	return string(v), nil
 }
 
-// Deprecated: use slice.ContainsAny instead
 func ContainsAny(s []string, v string) bool {
 	for _, vv := range s {
 		if strings.Contains(vv, v) {
