@@ -4,14 +4,14 @@ go 1.18
 
 require (
 	github.com/Masterminds/squirrel v1.5.3
-	github.com/golang-migrate/migrate/v4 v4.15.2
+	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/shopspring/decimal v1.2.0
 	github.com/stretchr/testify v1.8.1
 	go.mongodb.org/mongo-driver v1.10.1
 	golang.org/x/exp v0.0.0-20220927162542-c76eaa363f9d
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.25.0
 )
 
 require (
@@ -27,7 +27,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.2.0 // indirect
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
