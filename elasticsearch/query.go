@@ -17,6 +17,10 @@ func (s *Search) AppendSort(name string, params map[string]any) {
 	})
 }
 
+func (s *Search) AppendSortNoParams(name string) {
+	s.Sort = append(s.Sort, name)
+}
+
 type Query struct {
 	Bool     SearchBool      `json:"bool,omitempty"`
 	Boosting *SearchBoosting `json:"boosting,omitempty"`
