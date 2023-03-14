@@ -60,3 +60,26 @@ func Is(err error, target error) bool {
 func New(text string) error {
 	return errors.New(text)
 }
+
+func IsNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	if Is(err, ErrNoResults) {
+		return true
+	}
+	if Is(err, sql.ErrNoRows) {
+		return true
+	}
+	estr := err.Error()
+	if estr == "sql: no rows in result set" {
+		return true
+	}
+	if estr == "record not found" {
+		return true
+	}
+	if estr == "no results" {
+		return true
+	}
+	return false
+}
