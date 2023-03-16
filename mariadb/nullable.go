@@ -167,3 +167,54 @@ func (ns NullTime) ToTimePtr() *time.Time {
 	}
 	return &ns.Time
 }
+
+//
+
+type NullBool struct {
+	Bool  bool
+	Valid bool // Valid is true if Int64 is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullBool) Scan(value any) error {
+	if value == nil {
+		ns.Bool, ns.Valid = false, false
+		return nil
+	}
+	ns2 := &sql.NullBool{}
+	if err := ns2.Scan(value); err != nil {
+		return err
+	}
+	ns.Valid = true
+	ns.Bool = ns2.Bool
+	return nil
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullBool) Value() (driver.Value, error) {
+	return sql.NullBool{
+		Bool:  ns.Bool,
+		Valid: ns.Valid,
+	}.Value()
+}
+
+func (ns NullBool) MarshalJSON() ([]byte, error) {
+	if !ns.Valid {
+		return []byte("null"), nil
+	}
+	return json.Marshal(ns.Bool)
+}
+
+func (ns *NullBool) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		ns.Valid = false
+		return nil
+	}
+	ns.Valid = true
+	return json.Unmarshal(data, &ns.Bool)
+}
+
+func (ns NullBool) HydrateSchemaObject(schema OpenAPISchemaObject) {
+	schema.SetType("boolean")
+	schema.SetDescription("nullable boolean")
+}
