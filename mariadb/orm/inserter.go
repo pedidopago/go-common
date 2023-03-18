@@ -66,19 +66,21 @@ func extractInsert(rtype reflect.Type, value reflect.Value, tag string) (keys []
 		}
 		if inline {
 			fieldValue := value.Field(i)
+			ft := sf.Type
 		inlineInsertStart:
 			if fieldValue.Kind() == reflect.Ptr && fieldValue.IsNil() {
 				continue
 			}
 			if fieldValue.Kind() == reflect.Ptr {
 				fieldValue = fieldValue.Elem()
+				ft = ft.Elem()
 				goto inlineInsertStart
 			}
 			if fieldValue.Kind() != reflect.Struct {
 				// no support for non struct inlines yet!
 				continue
 			}
-			xk, xv := extractInsert(sf.Type, value.Field(i), tag)
+			xk, xv := extractInsert(ft, fieldValue, tag)
 			keys = append(keys, xk...)
 			values = append(values, xv...)
 			continue
