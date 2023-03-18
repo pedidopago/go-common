@@ -42,7 +42,7 @@ func extractInsert(rtype reflect.Type, value reflect.Value, tag string) (keys []
 		}
 		if len(tvs) == 1 {
 			if tvs[0] == "" {
-				tvs[0] = strings.ToLower(sf.Name)
+				keys = append(keys, strings.ToLower(sf.Name))
 			} else {
 				keys = append(keys, tvs[0])
 			}
