@@ -5,7 +5,6 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"github.com/pedidopago/go-common/mariadb"
 	"github.com/pedidopago/go-common/mariadb/errors"
 	"github.com/pedidopago/go-common/util"
 )
@@ -65,7 +64,7 @@ type SelectModifier[T Model] func(sb squirrel.SelectBuilder) squirrel.SelectBuil
 
 func (t Table[T]) Select(ctx context.Context, where SelectWhere, modifiers ...SelectModifier[T]) ([]T, error) {
 	var zv T
-	sq := squirrel.Select(mariadb.ExtractColumnsOfStruct(util.Default(t.SelectTag, "db"), zv)...)
+	sq := squirrel.Select(ExtractSelectColumnsOfStruct(zv, util.Default(t.SelectTag, "db"))...)
 	sq = sq.From(zv.TableName())
 	if where != nil {
 		whereClause, whereArgs := where()
