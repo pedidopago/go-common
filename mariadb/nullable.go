@@ -175,6 +175,13 @@ func (ns NullTime) ToTimePtr() *time.Time {
 	return &ns.Time
 }
 
+func Time(t time.Time) NullTime {
+	return NullTime{
+		Time:  t,
+		Valid: !t.IsZero(),
+	}
+}
+
 //
 
 type NullBool struct {
