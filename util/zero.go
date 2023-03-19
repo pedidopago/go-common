@@ -47,3 +47,10 @@ func Maybe[T comparable](fallback T) func(v T, err error) T {
 		return v
 	}
 }
+
+func ValueOrZero[T comparable](v *T) T {
+	if v == nil {
+		return reflect.Zero(reflect.TypeOf(v)).Interface().(T)
+	}
+	return *v
+}
