@@ -22,3 +22,19 @@ func (x *Timestamp) ToProto() *timestamppb.Timestamp {
 	}
 	return timestamppb.New(time.UnixMilli(int64(*x)))
 }
+
+func (x *Timestamp) FromTime(t *time.Time) *Timestamp {
+	if t == nil {
+		return nil
+	}
+	*x = Timestamp(t.UnixMilli())
+	return x
+}
+
+func (x *Timestamp) ToTime() *time.Time {
+	if x == nil {
+		return nil
+	}
+	t := time.UnixMilli(int64(*x))
+	return &t
+}
