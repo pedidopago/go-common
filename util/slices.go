@@ -51,3 +51,29 @@ func ContainsAny(s []string, v string) bool {
 	}
 	return false
 }
+
+func JoinResults[T any](s []T, err error) func(other []T, err error) ([]T, error) {
+	return func(other []T, err2 error) ([]T, error) {
+		if err != nil && err2 != nil {
+			return nil, err
+		}
+		return append(s, other...), nil
+	}
+}
+
+func Deduplicate[T any](s []T, eqfn func(T, T) bool) []T {
+	var res []T
+	for _, v := range s {
+		var found bool
+		for _, vv := range res {
+			if eqfn(v, vv) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			res = append(res, v)
+		}
+	}
+	return res
+}
