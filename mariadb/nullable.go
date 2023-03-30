@@ -112,6 +112,13 @@ func (ns NullString) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetDescription("nullable string")
 }
 
+func String(s string) NullString {
+	return NullString{
+		String: s,
+		Valid:  s != "",
+	}
+}
+
 type NullTime struct {
 	Time  time.Time
 	Valid bool // Valid is true if Time is not NULL
@@ -166,6 +173,13 @@ func (ns NullTime) ToTimePtr() *time.Time {
 		return nil
 	}
 	return &ns.Time
+}
+
+func Time(t time.Time) NullTime {
+	return NullTime{
+		Time:  t,
+		Valid: !t.IsZero(),
+	}
 }
 
 //

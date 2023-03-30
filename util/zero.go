@@ -47,3 +47,18 @@ func Maybe[T comparable](fallback T) func(v T, err error) T {
 		return v
 	}
 }
+
+func ValueOrZero[T comparable](v *T) T {
+	if v == nil {
+		return reflect.Zero(reflect.TypeOf(v)).Interface().(T)
+	}
+	return *v
+}
+
+func PtrOption[T any, V any](v *T, f func(T) V) V {
+	if v == nil {
+		var zv V
+		return zv
+	}
+	return f(*v)
+}

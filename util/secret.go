@@ -2,9 +2,6 @@ package util
 
 import (
 	"database/sql/driver"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 type SecretString string
@@ -22,10 +19,6 @@ func (s SecretString) MarshalText() ([]byte, error) {
 
 func (s SecretString) MarshalJSON() ([]byte, error) {
 	return []byte("\"" + s.String() + "\""), nil
-}
-
-func (s SecretString) MarshalBSONValue() (bsontype.Type, []byte, error) {
-	return bson.MarshalValue(string(s))
 }
 
 func (s SecretString) Value() (driver.Value, error) {

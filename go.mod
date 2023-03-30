@@ -9,7 +9,6 @@ require (
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/shopspring/decimal v1.2.0
 	github.com/stretchr/testify v1.8.1
-	go.mongodb.org/mongo-driver v1.10.1
 	golang.org/x/exp v0.0.0-20220927162542-c76eaa363f9d
 	google.golang.org/protobuf v1.25.0
 )
