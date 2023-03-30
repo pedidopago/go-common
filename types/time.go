@@ -17,6 +17,22 @@ func (x *Time) FromFormattedTime(s string) error {
 	return err
 }
 
+func (x *Time) FromTime(t *time.Time) *Time {
+	if t == nil {
+		return nil
+	}
+	*x = Time(*t)
+	return x
+}
+
+func (x *Time) ToTime() *time.Time {
+	if x == nil {
+		return nil
+	}
+	t := time.Time(*x)
+	return &t
+}
+
 func UnixMilli(msec int64) Time {
 	return Time(time.UnixMilli(msec))
 }
