@@ -54,3 +54,11 @@ func ValueOrZero[T comparable](v *T) T {
 	}
 	return *v
 }
+
+func PtrOption[T any, V any](v *T, f func(T) V) V {
+	if v == nil {
+		var zv V
+		return zv
+	}
+	return f(*v)
+}
