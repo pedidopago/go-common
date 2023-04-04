@@ -56,6 +56,9 @@ func WaitForKeyCallbackEx[T comparable](ctx context.Context, cl Client, key stri
 }
 
 func NewKeyCallbackWriter[T any](ctx context.Context, cl Client, key string, timeout time.Duration) func(v T) {
+	if key == "" {
+		return func(v T) {}
+	}
 	return func(v T) {
 		b, err := json.Marshal(v)
 		if err != nil {
