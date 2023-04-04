@@ -14,9 +14,7 @@ type StatusCmder interface {
 	Name() string
 	FullName() string
 	Args() []interface{}
-	SetErr(e error)
 	Err() error
-	SetVal(val string)
 	Val() string
 	Result() (string, error)
 	String() string
@@ -26,13 +24,10 @@ type StringCmder interface {
 	Name() string
 	FullName() string
 	Args() []interface{}
-	SetErr(e error)
 	Err() error
-	SetVal(val string)
 	Val() string
 	Result() (string, error)
 	Bytes() ([]byte, error)
-	Bool() (bool, error)
 	Int() (int, error)
 	Int64() (int64, error)
 	Uint64() (uint64, error)
