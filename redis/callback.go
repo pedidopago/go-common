@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 )
 
@@ -11,7 +12,21 @@ type CallbackResult[T comparable] struct {
 	Err error
 }
 
+var (
+	ErrKeyEmpty = errors.New("key is empty")
+)
+
 func WaitForKeyCallback[T comparable](ctx context.Context, cl Client, key string) <-chan CallbackResult[T] {
+
+	if key == "" {
+		ch := make(chan CallbackResult[T])
+		go func() {
+			defer close(ch)
+			ch <- CallbackResult[T]{Err: ErrKeyEmpty}
+		}()
+		return ch
+	}
+
 	var v T
 	ch := make(chan CallbackResult[T])
 
