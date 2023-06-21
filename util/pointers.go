@@ -11,3 +11,7 @@ func StringPtr(v string) *string {
 func Deref[T any](ptr *T) T {
 	return *ptr
 }
+
+func Ref[T any](v T) *T {
+	return &v
+}
