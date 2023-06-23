@@ -2,6 +2,7 @@ package mariadb
 
 import (
 	"database/sql"
+	"errors"
 	"reflect"
 	"strings"
 	"time"
@@ -70,4 +71,43 @@ func isScannable(t reflect.Type) bool {
 		return true
 	}
 	return t == reflect.TypeOf(time.Time{})
+}
+
+func ExtractColumnsAndValues(s interface{}, tag string, ignoreFields ...string) (columns []string, values []interface{}, err error) {
+	v := reflect.ValueOf(s)
+	v = reflect.Indirect(v)
+	t := v.Type()
+	if v.Kind() != reflect.Struct {
+		return nil, nil, errors.New("type is not a struct")
+	}
+	if tag == "" {
+		return nil, nil, errors.New("missing tag")
+	}
+	for i := 0; i < t.NumField(); i++ {
+		if !v.Field(i).CanInterface() {
+			continue
+		}
+		field := t.Field(i)
+		col := field.Tag.Get(tag)
+		if col == "" {
+			continue
+		}
+		if v.Field(i).IsZero() {
+			continue
+		}
+		skip := false
+		for _, f := range ignoreFields {
+			if col == f {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			continue
+		}
+		val := v.Field(i).Interface()
+		columns = append(columns, col)
+		values = append(values, val)
+	}
+	return
 }
