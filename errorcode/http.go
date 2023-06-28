@@ -60,9 +60,9 @@ func NewError(code Error, msg string) error {
 
 func CodeFromError(err error) Error {
 	if !strings.Contains(err.Error(), ":") {
-		return err
+		return Error(err)
 	}
-	return errors.New(strings.Split(err.Error(), ":")[0])
+	return Error(errors.New(strings.Split(err.Error(), ":")[0]))
 }
 
 func MsgFromError(err error) string {
