@@ -8,7 +8,7 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	"github.com/pedidopago/go-common/mariadb/errors"
-	"github.com/pedidopago/go-common/util"
+	"github.com/pedidopago/go-common/slice"
 	"golang.org/x/exp/constraints"
 )
 
@@ -149,7 +149,7 @@ func SWhereOneOrMany[T comparable](b squirrel.SelectBuilder, col string, vals []
 		return b
 	}
 	if len(vals) > 1 {
-		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), util.ToInterfaces(vals)...)
+		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), slice.ToInterfaces(vals)...)
 	}
 	return b.Where(fmt.Sprintf("%s = ?", col), vals[0])
 }
@@ -159,10 +159,18 @@ func SWhereOneOrManyLike(b squirrel.SelectBuilder, col string, vals []string) sq
 		return b
 	}
 	if len(vals) > 1 {
-		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), util.ToInterfaces(vals)...)
+		return b.Where(fmt.Sprintf("%s IN (%s)", col, squirrel.Placeholders(len(vals))), slice.ToInterfaces(vals)...)
 	}
 	if strings.HasPrefix(vals[0], "%") || strings.HasSuffix(vals[0], "%") {
 		return b.Where(fmt.Sprintf("%s LIKE ?", col), vals[0])
 	}
 	return b.Where(fmt.Sprintf("%s = ?", col), vals[0])
+}
+
+func GetWithBuilder(ctx context.Context, dst interface{}, db sqlx.QueryerContext, q squirrel.SelectBuilder) error {
+	sq, args, err := q.ToSql()
+	if err != nil {
+		return errors.InvalidQuery(err)
+	}
+	return sqlx.GetContext(ctx, db, dst, sq, args...)
 }
