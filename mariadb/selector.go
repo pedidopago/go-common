@@ -174,3 +174,11 @@ func GetWithBuilder(ctx context.Context, dst interface{}, db sqlx.QueryerContext
 	}
 	return sqlx.GetContext(ctx, db, dst, sq, args...)
 }
+
+func SelectWithBuilder(ctx context.Context, dst interface{}, db sqlx.QueryerContext, q squirrel.SelectBuilder) error {
+	sq, args, err := q.ToSql()
+	if err != nil {
+		return errors.InvalidQuery(err)
+	}
+	return sqlx.SelectContext(ctx, db, dst, sq, args...)
+}
