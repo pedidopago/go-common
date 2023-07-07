@@ -8,13 +8,13 @@ import (
 )
 
 type TestAlpha struct {
-	Name  string           `json:"name"`
-	Betas Text[[]TestBeta] `json:"betas"`
+	Name  string           `json:"name" db:"name"`
+	Betas Text[[]TestBeta] `json:"betas" db:"betas"`
 }
 
 type TestBeta struct {
-	Name  string `json:"name"`
-	Score int    `json:"score"`
+	Name  string `json:"name" db:"name"`
+	Score int    `json:"score" db:"score"`
 }
 
 func TestMarshalUnmarshalJSON(t *testing.T) {
@@ -56,4 +56,13 @@ func TestMarshalUnmarshalJSON(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, (*mike.Betas.Data)[0].Name, (*mike2.Betas.Data)[0].Name)
+}
+
+func TestScanner(t *testing.T) {
+	item := TestAlpha{}
+
+	jdata := `[{"name": "Alpha", "score": -1},{"name": "Bravo", "score": -2}]`
+	assert.NoError(t, item.Betas.Scan([]byte(jdata)))
+	assert.NotNil(t, item.Betas.Data)
+	assert.Equal(t, 2, len(*item.Betas.Data))
 }
