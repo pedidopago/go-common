@@ -44,3 +44,11 @@ func (c *Binary[T]) UnmarshalJSON(data []byte) error {
 func (c Binary[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Data)
 }
+
+func (c Binary[T]) Deref() T {
+	if c.Data == nil {
+		var zv T
+		return zv
+	}
+	return *c.Data
+}

@@ -48,3 +48,11 @@ func (c *Text[T]) UnmarshalJSON(data []byte) error {
 func (c Text[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Data)
 }
+
+func (c Text[T]) Deref() T {
+	if c.Data == nil {
+		var zv T
+		return zv
+	}
+	return *c.Data
+}
