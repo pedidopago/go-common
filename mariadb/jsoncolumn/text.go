@@ -7,7 +7,7 @@ import (
 )
 
 // Text marshals to string when marshaling to the database
-type Text[T comparable] struct {
+type Text[T any] struct {
 	Data *T
 }
 
@@ -35,4 +35,16 @@ func (c Text[T]) Value() (driver.Value, error) {
 		return nil, err
 	}
 	return string(d), nil
+}
+
+func (c *Text[T]) UnmarshalJSON(data []byte) error {
+	if c.Data == nil {
+		var zv T
+		c.Data = &zv
+	}
+	return json.Unmarshal(data, c.Data)
+}
+
+func (c Text[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(c.Data)
 }

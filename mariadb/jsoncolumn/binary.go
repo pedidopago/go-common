@@ -7,7 +7,7 @@ import (
 )
 
 // Binary marshals to []byte when marshaling to database
-type Binary[T comparable] struct {
+type Binary[T any] struct {
 	Data *T
 }
 
@@ -30,5 +30,17 @@ func (c Binary[T]) Value() (driver.Value, error) {
 	if c.Data == nil {
 		return nil, nil
 	}
+	return json.Marshal(c.Data)
+}
+
+func (c *Binary[T]) UnmarshalJSON(data []byte) error {
+	if c.Data == nil {
+		var zv T
+		c.Data = &zv
+	}
+	return json.Unmarshal(data, c.Data)
+}
+
+func (c Binary[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Data)
 }
