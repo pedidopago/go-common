@@ -2,6 +2,7 @@ package mariadb
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strings"
 
@@ -181,4 +182,12 @@ func SelectWithBuilder(ctx context.Context, dst interface{}, db sqlx.QueryerCont
 		return errors.InvalidQuery(err)
 	}
 	return sqlx.SelectContext(ctx, db, dst, sq, args...)
+}
+
+func InsertWithBuilder(ctx context.Context, db sqlx.ExecerContext, q squirrel.InsertBuilder) (sql.Result, error) {
+	sq, args, err := q.ToSql()
+	if err != nil {
+		return nil, errors.InvalidQuery(err)
+	}
+	return db.ExecContext(ctx, sq, args...)
 }
