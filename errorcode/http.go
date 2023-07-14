@@ -73,86 +73,86 @@ func MsgFromError(err error) string {
 }
 
 func GetHTTPStatus(err Error) int {
-	switch CodeFromError(err) {
-	case ErrBadRequest:
+	switch CodeFromError(err).Error() {
+	case ErrBadRequest.Error():
 		return http.StatusBadRequest
-	case ErrUnauthorized:
+	case ErrUnauthorized.Error():
 		return http.StatusUnauthorized
-	case ErrPaymentRequired:
+	case ErrPaymentRequired.Error():
 		return http.StatusPaymentRequired
-	case ErrForbidden:
+	case ErrForbidden.Error():
 		return http.StatusForbidden
-	case ErrNotFound:
+	case ErrNotFound.Error():
 		return http.StatusNotFound
-	case ErrMethodNotAllowed:
+	case ErrMethodNotAllowed.Error():
 		return http.StatusMethodNotAllowed
-	case ErrNotAcceptable:
+	case ErrNotAcceptable.Error():
 		return http.StatusNotAcceptable
-	case ErrProxyAuthRequired:
+	case ErrProxyAuthRequired.Error():
 		return http.StatusProxyAuthRequired
-	case ErrRequestTimeout:
+	case ErrRequestTimeout.Error():
 		return http.StatusRequestTimeout
-	case ErrConflict:
+	case ErrConflict.Error():
 		return http.StatusConflict
-	case ErrGone:
+	case ErrGone.Error():
 		return http.StatusGone
-	case ErrLengthRequired:
+	case ErrLengthRequired.Error():
 		return http.StatusLengthRequired
-	case ErrPreconditionFailed:
+	case ErrPreconditionFailed.Error():
 		return http.StatusPreconditionFailed
-	case ErrRequestEntityTooLarge:
+	case ErrRequestEntityTooLarge.Error():
 		return http.StatusRequestEntityTooLarge
-	case ErrURITooLong:
+	case ErrURITooLong.Error():
 		return http.StatusRequestURITooLong
-	case ErrUnsupportedMediaType:
+	case ErrUnsupportedMediaType.Error():
 		return http.StatusUnsupportedMediaType
-	case ErrRequestedRangeNotSatisfiable:
+	case ErrRequestedRangeNotSatisfiable.Error():
 		return http.StatusRequestedRangeNotSatisfiable
-	case ErrExpectationFailed:
+	case ErrExpectationFailed.Error():
 		return http.StatusExpectationFailed
-	case ErrTeapot:
+	case ErrTeapot.Error():
 		return http.StatusTeapot
-	case ErrMisdirectedRequest:
+	case ErrMisdirectedRequest.Error():
 		return http.StatusMisdirectedRequest
-	case ErrUnprocessableEntity:
+	case ErrUnprocessableEntity.Error():
 		return http.StatusUnprocessableEntity
-	case ErrLocked:
+	case ErrLocked.Error():
 		return http.StatusLocked
-	case ErrFailedDependency:
+	case ErrFailedDependency.Error():
 		return http.StatusFailedDependency
-	case ErrTooEarly:
+	case ErrTooEarly.Error():
 		return http.StatusTooEarly
-	case ErrUpgradeRequired:
+	case ErrUpgradeRequired.Error():
 		return http.StatusUpgradeRequired
-	case ErrPreconditionRequired:
+	case ErrPreconditionRequired.Error():
 		return http.StatusPreconditionRequired
-	case ErrTooManyRequests:
+	case ErrTooManyRequests.Error():
 		return http.StatusTooManyRequests
-	case ErrRequestHeaderFieldsTooLarge:
+	case ErrRequestHeaderFieldsTooLarge.Error():
 		return http.StatusRequestHeaderFieldsTooLarge
-	case ErrUnavailableForLegalReasons:
+	case ErrUnavailableForLegalReasons.Error():
 		return http.StatusUnavailableForLegalReasons
-	case ErrInternalServerError:
+	case ErrInternalServerError.Error():
 		return http.StatusInternalServerError
-	case ErrNotImplemented:
+	case ErrNotImplemented.Error():
 		return http.StatusNotImplemented
-	case ErrBadGateway:
+	case ErrBadGateway.Error():
 		return http.StatusBadGateway
-	case ErrServiceUnavailable:
+	case ErrServiceUnavailable.Error():
 		return http.StatusServiceUnavailable
-	case ErrGatewayTimeout:
+	case ErrGatewayTimeout.Error():
 		return http.StatusGatewayTimeout
-	case ErrHTTPVersionNotSupported:
+	case ErrHTTPVersionNotSupported.Error():
 		return http.StatusHTTPVersionNotSupported
-	case ErrVariantAlsoNegotiates:
+	case ErrVariantAlsoNegotiates.Error():
 		return http.StatusVariantAlsoNegotiates
-	case ErrInsufficientStorage:
+	case ErrInsufficientStorage.Error():
 		return http.StatusInsufficientStorage
-	case ErrLoopDetected:
+	case ErrLoopDetected.Error():
 		return http.StatusLoopDetected
-	case ErrNotExtended:
+	case ErrNotExtended.Error():
 		return http.StatusNotExtended
-	case ErrNetworkAuthenticationRequired:
+	case ErrNetworkAuthenticationRequired.Error():
 		return http.StatusNetworkAuthenticationRequired
 	default:
 		return http.StatusInternalServerError
@@ -160,203 +160,203 @@ func GetHTTPStatus(err Error) int {
 }
 
 func GetEchoHTTPError(err Error) *echo.HTTPError {
-	switch CodeFromError(err) {
-	case ErrBadRequest:
+	switch CodeFromError(err).Error() {
+	case ErrBadRequest.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: MsgFromError(err),
 		}
-	case ErrUnauthorized:
+	case ErrUnauthorized.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusUnauthorized,
 			Message: MsgFromError(err),
 		}
-	case ErrPaymentRequired:
+	case ErrPaymentRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusPaymentRequired,
 			Message: MsgFromError(err),
 		}
-	case ErrForbidden:
+	case ErrForbidden.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusForbidden,
 			Message: MsgFromError(err),
 		}
-	case ErrNotFound:
+	case ErrNotFound.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusNotFound,
 			Message: MsgFromError(err),
 		}
-	case ErrMethodNotAllowed:
+	case ErrMethodNotAllowed.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusMethodNotAllowed,
 			Message: MsgFromError(err),
 		}
-	case ErrNotAcceptable:
+	case ErrNotAcceptable.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusNotAcceptable,
 			Message: MsgFromError(err),
 		}
-	case ErrProxyAuthRequired:
+	case ErrProxyAuthRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusProxyAuthRequired,
 			Message: MsgFromError(err),
 		}
-	case ErrRequestTimeout:
+	case ErrRequestTimeout.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusRequestTimeout,
 			Message: MsgFromError(err),
 		}
-	case ErrConflict:
+	case ErrConflict.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusConflict,
 			Message: MsgFromError(err),
 		}
-	case ErrGone:
+	case ErrGone.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusGone,
 			Message: MsgFromError(err),
 		}
-	case ErrLengthRequired:
+	case ErrLengthRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusLengthRequired,
 			Message: MsgFromError(err),
 		}
-	case ErrPreconditionFailed:
+	case ErrPreconditionFailed.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusPreconditionFailed,
 			Message: MsgFromError(err),
 		}
-	case ErrRequestEntityTooLarge:
+	case ErrRequestEntityTooLarge.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusRequestEntityTooLarge,
 			Message: MsgFromError(err),
 		}
-	case ErrURITooLong:
+	case ErrURITooLong.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusRequestURITooLong,
 			Message: MsgFromError(err),
 		}
-	case ErrUnsupportedMediaType:
+	case ErrUnsupportedMediaType.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusUnsupportedMediaType,
 			Message: MsgFromError(err),
 		}
-	case ErrRequestedRangeNotSatisfiable:
+	case ErrRequestedRangeNotSatisfiable.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusRequestedRangeNotSatisfiable,
 			Message: MsgFromError(err),
 		}
-	case ErrExpectationFailed:
+	case ErrExpectationFailed.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusExpectationFailed,
 			Message: MsgFromError(err),
 		}
-	case ErrTeapot:
+	case ErrTeapot.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusTeapot,
 			Message: MsgFromError(err),
 		}
-	case ErrMisdirectedRequest:
+	case ErrMisdirectedRequest.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusMisdirectedRequest,
 			Message: MsgFromError(err),
 		}
-	case ErrUnprocessableEntity:
+	case ErrUnprocessableEntity.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusUnprocessableEntity,
 			Message: MsgFromError(err),
 		}
-	case ErrLocked:
+	case ErrLocked.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusLocked,
 			Message: MsgFromError(err),
 		}
-	case ErrFailedDependency:
+	case ErrFailedDependency.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusFailedDependency,
 			Message: MsgFromError(err),
 		}
-	case ErrTooEarly:
+	case ErrTooEarly.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusTooEarly,
 			Message: MsgFromError(err),
 		}
-	case ErrUpgradeRequired:
+	case ErrUpgradeRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusUpgradeRequired,
 			Message: MsgFromError(err),
 		}
-	case ErrPreconditionRequired:
+	case ErrPreconditionRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusPreconditionRequired,
 			Message: MsgFromError(err),
 		}
-	case ErrTooManyRequests:
+	case ErrTooManyRequests.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusTooManyRequests,
 			Message: MsgFromError(err),
 		}
-	case ErrRequestHeaderFieldsTooLarge:
+	case ErrRequestHeaderFieldsTooLarge.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusRequestHeaderFieldsTooLarge,
 			Message: MsgFromError(err),
 		}
-	case ErrUnavailableForLegalReasons:
+	case ErrUnavailableForLegalReasons.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusUnavailableForLegalReasons,
 			Message: MsgFromError(err),
 		}
-	case ErrInternalServerError:
+	case ErrInternalServerError.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusInternalServerError,
 			Message: MsgFromError(err),
 		}
-	case ErrNotImplemented:
+	case ErrNotImplemented.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusNotImplemented,
 			Message: MsgFromError(err),
 		}
-	case ErrBadGateway:
+	case ErrBadGateway.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusBadGateway,
 			Message: MsgFromError(err),
 		}
-	case ErrServiceUnavailable:
+	case ErrServiceUnavailable.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusServiceUnavailable,
 			Message: MsgFromError(err),
 		}
-	case ErrGatewayTimeout:
+	case ErrGatewayTimeout.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusGatewayTimeout,
 			Message: MsgFromError(err),
 		}
-	case ErrHTTPVersionNotSupported:
+	case ErrHTTPVersionNotSupported.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusHTTPVersionNotSupported,
 			Message: MsgFromError(err),
 		}
-	case ErrVariantAlsoNegotiates:
+	case ErrVariantAlsoNegotiates.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusVariantAlsoNegotiates,
 			Message: MsgFromError(err),
 		}
-	case ErrInsufficientStorage:
+	case ErrInsufficientStorage.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusInsufficientStorage,
 			Message: MsgFromError(err),
 		}
-	case ErrLoopDetected:
+	case ErrLoopDetected.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusLoopDetected,
 			Message: MsgFromError(err),
 		}
-	case ErrNotExtended:
+	case ErrNotExtended.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusNotExtended,
 			Message: MsgFromError(err),
 		}
-	case ErrNetworkAuthenticationRequired:
+	case ErrNetworkAuthenticationRequired.Error():
 		return &echo.HTTPError{
 			Code:    http.StatusNetworkAuthenticationRequired,
 			Message: MsgFromError(err),
