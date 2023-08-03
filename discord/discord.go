@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"strings"
@@ -40,7 +39,7 @@ func NewWebhookMessage(input NewWebhookMessageInput) error {
 			return err
 		}
 		defer resp.Body.Close()
-		io.Copy(ioutil.Discard, resp.Body)
+		io.Copy(io.Discard, resp.Body)
 		if resp.StatusCode != 200 && resp.StatusCode != 204 {
 			return fmt.Errorf("%d", resp.StatusCode)
 		}
@@ -72,7 +71,7 @@ func NewWebhookMessage(input NewWebhookMessageInput) error {
 		return err
 	}
 	defer resp.Body.Close()
-	io.Copy(ioutil.Discard, resp.Body)
+	io.Copy(io.Discard, resp.Body)
 	if resp.StatusCode != 200 && resp.StatusCode != 204 {
 		return fmt.Errorf("%d", resp.StatusCode)
 	}
