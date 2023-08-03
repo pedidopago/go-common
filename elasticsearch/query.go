@@ -1,5 +1,9 @@
+// Package elasticsearch provides a set of helper functions to the elasticsearch API
+//
+// Deprecated: this package is deprecated.
 package elasticsearch
 
+// Deprecated: this package is deprecated.
 type Search struct {
 	From  uint64 `json:"from,omitempty"`
 	Size  uint64 `json:"size,omitempty"`
@@ -21,11 +25,13 @@ func (s *Search) AppendSortNoParams(name string) {
 	s.Sort = append(s.Sort, name)
 }
 
+// Deprecated: this package is deprecated.
 type Query struct {
 	Bool     SearchBool      `json:"bool,omitempty"`
 	Boosting *SearchBoosting `json:"boosting,omitempty"`
 }
 
+// Deprecated: this package is deprecated.
 type SearchBool struct {
 	Must    []map[string]any `json:"must,omitempty"`
 	MustNot []map[string]any `json:"must_not,omitempty"`
@@ -33,25 +39,31 @@ type SearchBool struct {
 	Should  []map[string]any `json:"should,omitempty"`
 }
 
+// Deprecated: this package is deprecated.
 type SearchBoosting struct {
 	Positive      map[string]any `json:"positive,omitempty"`
 	Negative      map[string]any `json:"negative,omitempty"`
 	NegativeBoost float64        `json:"negative_boost,omitempty"`
 }
 
+// Deprecated: this package is deprecated.
 type SearchWildcard map[string]any
 
+// Deprecated: this package is deprecated.
 type Range map[string]any
 
+// Deprecated: this package is deprecated.
 func NewRange() Range {
 	r := make(map[string]any)
 	return Range(r)
 }
 
+// Deprecated: this package is deprecated.
 func RangeGte[T any](s Range, value T) {
 	s["gte"] = value
 }
 
+// Deprecated: this package is deprecated.
 func RangeLte[T any](s Range, value T) {
 	s["lte"] = value
 }
@@ -59,6 +71,7 @@ func RangeLte[T any](s Range, value T) {
 // Term is an exact query
 // Match is a fuzzy query
 
+// Deprecated: this package is deprecated.
 func BoolMustMatch[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
@@ -70,20 +83,24 @@ func BoolMustMatch[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolFilterWildcardDefaults(q *Query, fieldName string, value string) {
 	BoolFilterWildcard(q, fieldName, value, 1.0, "constant_score")
 }
 
+// Deprecated: this package is deprecated.
 func BoolShouldWildcardDefaults(q *Query, fieldName string, value string) {
 	BoolShouldWildcard(q, fieldName, value, 1.0, "constant_score")
 }
 
+// Deprecated: this package is deprecated.
 type WildcardStruct struct {
 	Value   string  `json:"value"`
 	Boost   float64 `json:"boost,omitempty"`
 	Rewrite string  `json:"rewrite,omitempty"`
 }
 
+// Deprecated: this package is deprecated.
 func BoolFilterWildcard(q *Query, fieldName string, value string, boost float64, rewrite string) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
@@ -99,6 +116,7 @@ func BoolFilterWildcard(q *Query, fieldName string, value string, boost float64,
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolShouldWildcard(q *Query, fieldName string, value string, boost float64, rewrite string) {
 	if q.Bool.Should == nil {
 		q.Bool.Should = []map[string]any{}
@@ -114,6 +132,7 @@ func BoolShouldWildcard(q *Query, fieldName string, value string, boost float64,
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolFilterMatch[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
@@ -125,6 +144,7 @@ func BoolFilterMatch[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolMust(q *Query, fieldName string, value any) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
@@ -134,6 +154,7 @@ func BoolMust(q *Query, fieldName string, value any) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolMustTerm[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
@@ -145,6 +166,7 @@ func BoolMustTerm[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolMustNotTerm[T any](q *Query, fieldName string, value T) {
 	if q.Bool.MustNot == nil {
 		q.Bool.MustNot = []map[string]any{}
@@ -156,6 +178,7 @@ func BoolMustNotTerm[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolFilterTerm[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
@@ -167,6 +190,7 @@ func BoolFilterTerm[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolMustRange(q *Query, fieldName string, rng Range) {
 	if q.Bool.Must == nil {
 		q.Bool.Must = []map[string]any{}
@@ -178,6 +202,7 @@ func BoolMustRange(q *Query, fieldName string, rng Range) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolFilterRange(q *Query, fieldName string, rng Range) {
 	if q.Bool.Filter == nil {
 		q.Bool.Filter = []map[string]any{}
@@ -191,6 +216,7 @@ func BoolFilterRange(q *Query, fieldName string, rng Range) {
 
 //
 
+// Deprecated: this package is deprecated.
 func BoolShouldMatch[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Should == nil {
 		q.Bool.Should = []map[string]any{}
@@ -202,6 +228,7 @@ func BoolShouldMatch[T any](q *Query, fieldName string, value T) {
 	})
 }
 
+// Deprecated: this package is deprecated.
 func BoolShouldTerm[T any](q *Query, fieldName string, value T) {
 	if q.Bool.Should == nil {
 		q.Bool.Should = []map[string]any{}
@@ -215,12 +242,14 @@ func BoolShouldTerm[T any](q *Query, fieldName string, value T) {
 
 //
 
+// Deprecated: this package is deprecated.
 func NewOrderDesc() map[string]any {
 	return map[string]any{
 		"order": "desc",
 	}
 }
 
+// Deprecated: this package is deprecated.
 func NewOrderAsc() map[string]any {
 	return map[string]any{
 		"order": "asc",
