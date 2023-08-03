@@ -65,4 +65,5 @@ func TestScanner(t *testing.T) {
 	assert.NoError(t, item.Betas.Scan([]byte(jdata)))
 	assert.NotNil(t, item.Betas.Data)
 	assert.Equal(t, 2, len(*item.Betas.Data))
+	assert.NoError(t, item.Betas.Scan(nil))
 }

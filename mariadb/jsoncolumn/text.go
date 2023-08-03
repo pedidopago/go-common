@@ -12,10 +12,16 @@ type Text[T any] struct {
 }
 
 func (c *Text[T]) Scan(src any) error {
+	if src == nil {
+		c.Data = nil
+		return nil
+	}
+
 	if c.Data == nil {
 		var zv T
 		c.Data = &zv
 	}
+
 	switch v := src.(type) {
 	case []byte:
 		return json.Unmarshal(v, c.Data)
