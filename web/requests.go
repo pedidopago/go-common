@@ -12,15 +12,16 @@ import (
 type WebLogger func(msg string, args ...interface{})
 
 type DoRequestInput struct {
-	Input        any
-	Output       any
-	URL          string
-	Method       string
-	RequestFunc  func(*http.Request) error
-	ResponseFunc func(*http.Response) error
-	Headers      map[string][]string
-	Client       *http.Client
-	Logger       WebLogger
+	Input          any
+	Output         any
+	URL            string
+	Method         string
+	RequestFunc    func(*http.Request) error
+	ResponseFunc   func(*http.Response) error
+	Headers        map[string][]string
+	Client         *http.Client
+	Logger         WebLogger
+	ExpectStatuses []int
 }
 
 func DoRequest(ctx context.Context, d DoRequestInput) error {
@@ -72,8 +73,21 @@ func DoRequest(ctx context.Context, d DoRequestInput) error {
 			return fmt.Errorf("response func: %w", err)
 		}
 	}
-	if resp.StatusCode != http.StatusOK {
-		return ErrorFromResponse(ctx, resp)
+	if d.ExpectStatuses != nil {
+		ok := false
+		for _, s := range d.ExpectStatuses {
+			if resp.StatusCode == s {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			return ErrorFromResponse(ctx, resp)
+		}
+	} else {
+		if resp.StatusCode != http.StatusOK {
+			return ErrorFromResponse(ctx, resp)
+		}
 	}
 	if d.Output != nil {
 		if err := json.NewDecoder(resp.Body).Decode(d.Output); err != nil {
