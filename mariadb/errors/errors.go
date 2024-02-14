@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
+	"github.com/pedidopago/go-common/errorcode"
 )
 
 var (
@@ -82,4 +84,16 @@ func IsNotFound(err error) bool {
 		return true
 	}
 	return false
+}
+
+func ToErrorCode(err error) errorcode.Error {
+	if err == nil {
+		return nil
+	}
+
+	if IsNotFound(err) {
+		return errorcode.ErrNotFound
+	}
+
+	return errorcode.ErrInternalServerError
 }
