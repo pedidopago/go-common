@@ -69,7 +69,8 @@ func MsgFromError(err error) string {
 	if !strings.Contains(err.Error(), ":") {
 		return ""
 	}
-	return strings.Replace(strings.Split(err.Error(), ":")[1], " ", "", 1)
+
+	return strings.TrimSpace(strings.SplitN(err.Error(), ":", 2)[1])
 }
 
 func GetHTTPStatus(err Error) int {
