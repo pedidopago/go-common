@@ -67,7 +67,7 @@ func CodeFromError(err error) Error {
 
 func MsgFromError(err error) string {
 	if !strings.Contains(err.Error(), ":") {
-		return ""
+		return err.Error()
 	}
 
 	return strings.TrimSpace(strings.SplitN(err.Error(), ":", 2)[1])
