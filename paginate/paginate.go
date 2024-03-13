@@ -1,4 +1,4 @@
-package pagination
+package paginate
 
 type Pagination struct {
 	TotalItems   int64   `json:"total_items"`
