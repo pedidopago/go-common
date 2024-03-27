@@ -9,7 +9,30 @@ import (
 	"time"
 )
 
-func ExtractColumnsOfStruct(tag string, src any, withBackticksColumn ...string) []string {
+type extractColumnsOfStructOption struct {
+	withBackticks []string
+}
+
+type ExtractColumnsOfStructOption func(*extractColumnsOfStructOption)
+
+func WithBackticksColumns(cols []string) ExtractColumnsOfStructOption {
+	return func(o *extractColumnsOfStructOption) {
+		if o != nil {
+			o.withBackticks = cols
+		}
+	}
+}
+
+func getExtractColumnsOfStructOption(options []ExtractColumnsOfStructOption) extractColumnsOfStructOption {
+	opts := extractColumnsOfStructOption{}
+
+	for _, o := range options {
+		o(&opts)
+	}
+	return opts
+}
+
+func ExtractColumnsOfStruct(tag string, src any, options ...ExtractColumnsOfStructOption) []string {
 	if src == nil {
 		return nil
 	}
@@ -17,7 +40,7 @@ func ExtractColumnsOfStruct(tag string, src any, withBackticksColumn ...string) 
 exOfStruct:
 	switch t.Kind() {
 	case reflect.Struct:
-		return extractColumnsOfStruct("", tag, t, withBackticksColumn...)
+		return extractColumnsOfStruct("", tag, t, options...)
 	case reflect.Pointer:
 		t = t.Elem()
 		goto exOfStruct
@@ -26,7 +49,10 @@ exOfStruct:
 	}
 }
 
-func extractColumnsOfStruct(prefix, tag string, src reflect.Type, withBackticksColumn ...string) []string {
+func extractColumnsOfStruct(prefix, tag string, src reflect.Type, options ...ExtractColumnsOfStructOption) []string {
+
+	opt := getExtractColumnsOfStructOption(options)
+
 	n := src.NumField()
 	outItems := make([]string, 0, n)
 	for i := 0; i < n; i++ {
@@ -43,7 +69,7 @@ func extractColumnsOfStruct(prefix, tag string, src reflect.Type, withBackticksC
 			tname = tv
 		}
 
-		for _, withBackticks := range withBackticksColumn {
+		for _, withBackticks := range opt.withBackticks {
 			if tv == withBackticks {
 				tv = fmt.Sprintf("`%s`", tv)
 			}
