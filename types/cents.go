@@ -23,3 +23,22 @@ func (x *Cents) FromDecimal(d *decimal.Decimal) *Cents {
 	*x = Cents(d.Shift(2).IntPart())
 	return x
 }
+
+func NewCentsFromString(s string) *Cents {
+	if s == "" {
+		return nil
+	}
+	d, err := decimal.NewFromString(s)
+	if err != nil {
+		return nil
+	}
+	return NewCentsFromDecimal(&d)
+}
+
+func NewCentsFromDecimal(d *decimal.Decimal) *Cents {
+	if d == nil {
+		return nil
+	}
+	cents := Cents(d.Shift(2).IntPart())
+	return &cents
+}
