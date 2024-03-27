@@ -3,12 +3,13 @@ package mariadb
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 	"time"
 )
 
-func ExtractColumnsOfStruct(tag string, src any) []string {
+func ExtractColumnsOfStruct(tag string, src any, withBackticksColumn ...string) []string {
 	if src == nil {
 		return nil
 	}
@@ -16,7 +17,7 @@ func ExtractColumnsOfStruct(tag string, src any) []string {
 exOfStruct:
 	switch t.Kind() {
 	case reflect.Struct:
-		return extractColumnsOfStruct("", tag, t)
+		return extractColumnsOfStruct("", tag, t, withBackticksColumn...)
 	case reflect.Pointer:
 		t = t.Elem()
 		goto exOfStruct
@@ -25,7 +26,7 @@ exOfStruct:
 	}
 }
 
-func extractColumnsOfStruct(prefix, tag string, src reflect.Type) []string {
+func extractColumnsOfStruct(prefix, tag string, src reflect.Type, withBackticksColumn ...string) []string {
 	n := src.NumField()
 	outItems := make([]string, 0, n)
 	for i := 0; i < n; i++ {
@@ -41,6 +42,13 @@ func extractColumnsOfStruct(prefix, tag string, src reflect.Type) []string {
 		} else {
 			tname = tv
 		}
+
+		for _, withBackticks := range withBackticksColumn {
+			if tv == withBackticks {
+				tv = fmt.Sprintf("`%s`", tv)
+			}
+		}
+
 		if sf.Type.Kind() == reflect.Struct {
 			if isScannable(sf.Type) {
 				outItems = append(outItems, prefix+tname)
