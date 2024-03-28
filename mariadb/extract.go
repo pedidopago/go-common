@@ -15,7 +15,7 @@ type extractColumnsOfStructOption struct {
 
 type ExtractColumnsOfStructOption func(*extractColumnsOfStructOption)
 
-func WithBackticksColumns(cols []string) ExtractColumnsOfStructOption {
+func WithBackticksColumns(cols ...string) ExtractColumnsOfStructOption {
 	return func(o *extractColumnsOfStructOption) {
 		if o != nil {
 			o.withBackticks = cols
@@ -70,8 +70,8 @@ func extractColumnsOfStruct(prefix, tag string, src reflect.Type, options ...Ext
 		}
 
 		for _, withBackticks := range opt.withBackticks {
-			if tv == withBackticks {
-				tv = fmt.Sprintf("`%s`", tv)
+			if tname == withBackticks {
+				tname = fmt.Sprintf("`%s`", tv)
 			}
 		}
 

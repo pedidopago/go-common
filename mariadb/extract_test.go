@@ -23,10 +23,10 @@ type TestHelium struct {
 }
 
 func TestExtractTest(t *testing.T) {
-	elems := ExtractColumnsOfStruct("db", TestStruct{})
+	elems := ExtractColumnsOfStruct("db", TestStruct{}, WithBackticksColumns("age"))
 	require.Equal(t, 5, len(elems))
 	assert.Equal(t, "id", elems[0])
-	assert.Equal(t, "age", elems[1])
+	assert.Equal(t, "`age`", elems[1])
 	assert.Equal(t, "props.first", elems[2])
 	assert.Equal(t, "props.last", elems[3])
 	assert.Equal(t, "helium.created_at", elems[4])
