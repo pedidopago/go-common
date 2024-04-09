@@ -11,6 +11,7 @@ import (
 
 type extractColumnsOfStructOption struct {
 	withBackticks []string
+	ignoreFields  []string
 }
 
 type ExtractColumnsOfStructOption func(*extractColumnsOfStructOption)
@@ -19,6 +20,14 @@ func WithBackticksColumns(cols ...string) ExtractColumnsOfStructOption {
 	return func(o *extractColumnsOfStructOption) {
 		if o != nil {
 			o.withBackticks = cols
+		}
+	}
+}
+
+func IgnoreFields(fields ...string) ExtractColumnsOfStructOption {
+	return func(o *extractColumnsOfStructOption) {
+		if o != nil {
+			o.ignoreFields = fields
 		}
 	}
 }
@@ -131,6 +140,60 @@ func ExtractColumnsAndValues(s interface{}, tag string, ignoreFields ...string) 
 		}
 		skip := false
 		for _, f := range ignoreFields {
+			if col == f {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			continue
+		}
+		val := v.Field(i).Interface()
+		columns = append(columns, col)
+		values = append(values, val)
+	}
+	return
+}
+
+func ExtractColumnsAndValuesV2(s interface{}, tag string, options ...ExtractColumnsOfStructOption) (columns []string, values []interface{}, err error) {
+	v := reflect.ValueOf(s)
+	v = reflect.Indirect(v)
+	t := v.Type()
+	if v.Kind() != reflect.Struct {
+		return nil, nil, errors.New("type is not a struct")
+	}
+	if tag == "" {
+		return nil, nil, errors.New("missing tag")
+	}
+
+	opt := getExtractColumnsOfStructOption(options)
+
+	for i := 0; i < t.NumField(); i++ {
+		if !v.Field(i).CanInterface() {
+			continue
+		}
+		field := t.Field(i)
+		col := field.Tag.Get(tag)
+		if col == "" {
+			continue
+		}
+
+		if col == "-" {
+			continue
+		}
+
+		for _, withBackticks := range opt.withBackticks {
+			if col == withBackticks {
+				col = fmt.Sprintf("`%s`", col)
+			}
+		}
+
+		if v.Field(i).IsZero() {
+			continue
+		}
+
+		skip := false
+		for _, f := range opt.ignoreFields {
 			if col == f {
 				skip = true
 				break
