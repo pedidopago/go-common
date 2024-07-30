@@ -1,6 +1,8 @@
 module github.com/pedidopago/go-common
 
-go 1.18
+go 1.21
+
+toolchain go1.22.5
 
 require (
 	github.com/Masterminds/squirrel v1.5.3
@@ -11,7 +13,7 @@ require (
 	github.com/shopspring/decimal v1.2.0
 	github.com/stretchr/testify v1.8.3
 	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.34.1
 )
 
 require (
@@ -28,9 +30,10 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
+	google.golang.org/grpc v1.65.0
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

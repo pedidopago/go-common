@@ -1,0 +1,90 @@
+package errorcode
+
+import "google.golang.org/grpc/codes"
+
+func GetGRPCStatus(err Error) codes.Code {
+	switch CodeFromError(err).Error() {
+	case ErrBadRequest.Error():
+		return codes.InvalidArgument
+	case ErrUnauthorized.Error():
+		return codes.Unauthenticated
+	case ErrPaymentRequired.Error():
+		return codes.FailedPrecondition
+	case ErrForbidden.Error():
+		return codes.PermissionDenied
+	case ErrNotFound.Error():
+		return codes.NotFound
+	case ErrMethodNotAllowed.Error():
+		return codes.Unimplemented
+	case ErrNotAcceptable.Error():
+		return codes.InvalidArgument
+	case ErrProxyAuthRequired.Error():
+		return codes.Unauthenticated
+	case ErrRequestTimeout.Error():
+		return codes.DeadlineExceeded
+	case ErrConflict.Error():
+		return codes.AlreadyExists
+	case ErrGone.Error():
+		return codes.NotFound
+	case ErrLengthRequired.Error():
+		return codes.InvalidArgument
+	case ErrPreconditionFailed.Error():
+		return codes.FailedPrecondition
+	case ErrRequestEntityTooLarge.Error():
+		return codes.ResourceExhausted
+	case ErrURITooLong.Error():
+		return codes.ResourceExhausted
+	case ErrUnsupportedMediaType.Error():
+		return codes.InvalidArgument
+	case ErrRequestedRangeNotSatisfiable.Error():
+		return codes.InvalidArgument
+	case ErrExpectationFailed.Error():
+		return codes.InvalidArgument
+	case ErrTeapot.Error():
+		return codes.Unimplemented
+	case ErrMisdirectedRequest.Error():
+		return codes.Unavailable
+	case ErrUnprocessableEntity.Error():
+		return codes.InvalidArgument
+	case ErrLocked.Error():
+		return codes.FailedPrecondition
+	case ErrFailedDependency.Error():
+		return codes.FailedPrecondition
+	case ErrTooEarly.Error():
+		return codes.Unavailable
+	case ErrUpgradeRequired.Error():
+		return codes.Unimplemented
+	case ErrPreconditionRequired.Error():
+		return codes.FailedPrecondition
+	case ErrTooManyRequests.Error():
+		return codes.ResourceExhausted
+	case ErrRequestHeaderFieldsTooLarge.Error():
+		return codes.ResourceExhausted
+	case ErrUnavailableForLegalReasons.Error():
+		return codes.Unavailable
+	case ErrInternalServerError.Error():
+		return codes.Internal
+	case ErrNotImplemented.Error():
+		return codes.Unimplemented
+	case ErrBadGateway.Error():
+		return codes.Unavailable
+	case ErrServiceUnavailable.Error():
+		return codes.Unavailable
+	case ErrGatewayTimeout.Error():
+		return codes.DeadlineExceeded
+	case ErrHTTPVersionNotSupported.Error():
+		return codes.Unimplemented
+	case ErrVariantAlsoNegotiates.Error():
+		return codes.Unimplemented
+	case ErrInsufficientStorage.Error():
+		return codes.ResourceExhausted
+	case ErrLoopDetected.Error():
+		return codes.ResourceExhausted
+	case ErrNotExtended.Error():
+		return codes.Unimplemented
+	case ErrNetworkAuthenticationRequired.Error():
+		return codes.Unauthenticated
+	default:
+		return codes.Internal
+	}
+}
