@@ -73,6 +73,10 @@ func MsgFromError(err error) string {
 	return strings.TrimSpace(strings.SplitN(err.Error(), ":", 2)[1])
 }
 
+func Match(err error, code Error) bool {
+	return CodeFromError(err) == code
+}
+
 func GetHTTPStatus(err Error) int {
 	switch CodeFromError(err).Error() {
 	case ErrBadRequest.Error():
