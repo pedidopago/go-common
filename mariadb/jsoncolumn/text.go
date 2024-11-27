@@ -8,7 +8,7 @@ import (
 
 // Text marshals to string when marshaling to the database
 type Text[T any] struct {
-	Data *T
+	Data *T `json:",inline"`
 }
 
 func (c *Text[T]) Scan(src any) error {

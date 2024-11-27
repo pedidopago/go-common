@@ -8,7 +8,7 @@ import (
 
 // Binary marshals to []byte when marshaling to database
 type Binary[T any] struct {
-	Data *T
+	Data *T `json:",inline"`
 }
 
 func (c *Binary[T]) Scan(src any) error {
