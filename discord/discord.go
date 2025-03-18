@@ -11,21 +11,21 @@ import (
 )
 
 type NewWebhookMessageInput struct {
-	URL      string
-	Content  string
-	Username string
-	Logs     string
-	Filename string
+	URL          string
+	Content      string
+	Username     string
+	FileContents string
+	Filename     string
 }
 
 func NewWebhookMessage(input NewWebhookMessageInput) error {
 	if input.URL == "" {
 		return nil
 	}
-	if input.Logs == "" {
+	if input.FileContents == "" {
 		ddata := struct {
 			Content  string `json:"content"`
-			Username string `json:"username"`
+			Username string `json:"username,omitempty"`
 		}{
 			Content:  input.Content,
 			Username: input.Username,
@@ -39,10 +39,14 @@ func NewWebhookMessage(input NewWebhookMessageInput) error {
 			return err
 		}
 		defer resp.Body.Close()
-		io.Copy(io.Discard, resp.Body)
 		if resp.StatusCode != 200 && resp.StatusCode != 204 {
-			return fmt.Errorf("%d", resp.StatusCode)
+			edata := new(bytes.Buffer)
+			io.Copy(edata, resp.Body)
+			return fmt.Errorf("%d - %s", resp.StatusCode, edata.String())
 		}
+
+		io.Copy(io.Discard, resp.Body)
+
 		return nil
 	}
 	var body bytes.Buffer
@@ -52,7 +56,7 @@ func NewWebhookMessage(input NewWebhookMessageInput) error {
 		filename = input.Filename
 	}
 	ww, _ := writer.CreateFormFile("file1", filename)
-	io.Copy(ww, strings.NewReader(input.Logs))
+	io.Copy(ww, strings.NewReader(input.FileContents))
 	ddata := struct {
 		Content  string `json:"content"`
 		Username string `json:"username"`

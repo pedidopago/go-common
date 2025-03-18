@@ -64,20 +64,20 @@ func Migrate(input MigrateInput) error {
 		driver, err = mysql.WithInstance(db, &mysql.Config{})
 		if err != nil {
 			discord.NewWebhookMessage(discord.NewWebhookMessageInput{
-				Username: util.Default(input.ServiceName, "Some Service"),
-				URL:      input.DiscordWebhook,
-				Content:  "Could not create the migration driver",
-				Logs:     err.Error(),
+				Username:     util.Default(input.ServiceName, "Some Service"),
+				URL:          input.DiscordWebhook,
+				Content:      "Could not create the migration driver",
+				FileContents: err.Error(),
 			})
 			return err
 		}
 		m, err = migrate.NewWithDatabaseInstance(input.MigrationsPath, "mysql", driver)
 		if err != nil {
 			discord.NewWebhookMessage(discord.NewWebhookMessageInput{
-				Username: util.Default(input.ServiceName, "Some Service"),
-				URL:      input.DiscordWebhook,
-				Content:  "Could not create the migration driver (2)",
-				Logs:     err.Error(),
+				Username:     util.Default(input.ServiceName, "Some Service"),
+				URL:          input.DiscordWebhook,
+				Content:      "Could not create the migration driver (2)",
+				FileContents: err.Error(),
 			})
 			return err
 		}
@@ -178,10 +178,10 @@ func Migrate(input MigrateInput) error {
 			return nil
 		}
 		_ = discord.NewWebhookMessage(discord.NewWebhookMessageInput{
-			Username: util.Default(input.ServiceName, "Some Service"),
-			URL:      input.DiscordWebhook,
-			Content:  "Could not create the migration driver (2)",
-			Logs:     err.Error(),
+			Username:     util.Default(input.ServiceName, "Some Service"),
+			URL:          input.DiscordWebhook,
+			Content:      "Could not create the migration driver (2)",
+			FileContents: err.Error(),
 		})
 		return err
 	}
