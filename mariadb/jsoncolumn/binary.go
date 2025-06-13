@@ -58,3 +58,9 @@ func (c Binary[T]) Deref() T {
 	}
 	return *c.Data
 }
+
+func MakeBinary[T any](data T) Binary[T] {
+	var c Binary[T]
+	c.Data = &data
+	return c
+}

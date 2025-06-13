@@ -62,3 +62,9 @@ func (c Text[T]) Deref() T {
 	}
 	return *c.Data
 }
+
+func MakeText[T any](data T) Text[T] {
+	var c Text[T]
+	c.Data = &data
+	return c
+}
