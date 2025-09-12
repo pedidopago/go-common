@@ -9,15 +9,18 @@ import (
 
 func TestSecureID(t *testing.T) {
 	allUUIDs := make(map[ulid.ULID]bool)
-	var allUUIDsLock sync.Mutex
+	var allUUIDsLock sync.RWMutex
 
 	setnx := func(id ulid.ULID) (success bool) {
-		allUUIDsLock.Lock()
-		defer allUUIDsLock.Unlock()
+		allUUIDsLock.RLock()
 		_, ok := allUUIDs[id]
+		allUUIDsLock.RUnlock()
 		if ok {
 			return false
 		}
+
+		allUUIDsLock.Lock()
+		defer allUUIDsLock.Unlock()
 
 		allUUIDs[id] = true
 		return true
