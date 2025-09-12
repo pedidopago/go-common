@@ -28,9 +28,9 @@ func TestSecureID(t *testing.T) {
 
 	wg := &sync.WaitGroup{}
 
-	for i := 0; i < 500; i++ {
+	for i := 0; i < 5000; i++ {
 		wg.Add(1)
-		go randosUUIDs(t, setnx, 1000, wg)
+		go randosUUIDs(t, setnx, 100, wg)
 	}
 
 	wg.Wait()
