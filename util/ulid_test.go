@@ -45,8 +45,8 @@ func TestSecureID(t *testing.T) {
 
 	close(uuidchan)
 
-	if len(allUUIDs) != 5000*100 {
-		t.Errorf("expected 5000*100 UUIDs, got %d", len(allUUIDs))
+	if len(allUUIDs) != 500000 {
+		t.Errorf("expected 500000 UUIDs, got %d", len(allUUIDs))
 	}
 }
 
