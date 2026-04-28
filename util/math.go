@@ -1,8 +1,10 @@
 package util
 
-import "golang.org/x/exp/constraints"
+type signed interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
 
-func Abs[T constraints.Signed](v T) T {
+func Abs[T signed](v T) T {
 	if v < 0 {
 		return -v
 	}

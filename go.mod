@@ -1,8 +1,6 @@
 module github.com/pedidopago/go-common
 
-go 1.21
-
-toolchain go1.22.5
+go 1.24
 
 require (
 	github.com/Masterminds/squirrel v1.5.3
@@ -12,7 +10,6 @@ require (
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/shopspring/decimal v1.2.0
 	github.com/stretchr/testify v1.8.3
-	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
 	google.golang.org/protobuf v1.34.1
 )
 

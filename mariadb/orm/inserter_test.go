@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/pedidopago/go-common/mariadb/orm"
-	"golang.org/x/exp/slices"
+	"slices"
 )
 
 type Client struct {

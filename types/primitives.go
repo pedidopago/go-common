@@ -3,9 +3,15 @@ package types
 import (
 	"reflect"
 	"strconv"
-
-	"golang.org/x/exp/constraints"
 )
+
+type integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type float interface {
+	~float32 | ~float64
+}
 
 type String string
 
@@ -19,7 +25,7 @@ func (String) FromString(v string) (String, error) {
 
 func (String) SchemaTypeKind() reflect.Kind { return reflect.String }
 
-type IntType[T constraints.Integer] struct {
+type IntType[T integer] struct {
 	value T
 }
 
@@ -47,7 +53,7 @@ func (b Boolean) Bool() bool {
 
 func (Boolean) SchemaTypeKind() reflect.Kind { return reflect.Bool }
 
-type FloatType[T constraints.Float] struct {
+type FloatType[T float] struct {
 	value T
 }
 

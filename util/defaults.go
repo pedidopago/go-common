@@ -1,6 +1,6 @@
 package util
 
-import "golang.org/x/exp/constraints"
+import "cmp"
 
 // Default will return the first non zero value in the given arguments.
 func Default[T comparable](vs ...T) T {
@@ -25,7 +25,7 @@ func DefaultFn[T comparable](fallback func() T, vs ...T) T {
 	return fallback()
 }
 
-func Max[T constraints.Ordered](vs ...T) T {
+func Max[T cmp.Ordered](vs ...T) T {
 	var zv T
 	for i, v := range vs {
 		if v > zv || i == 0 {
@@ -35,7 +35,7 @@ func Max[T constraints.Ordered](vs ...T) T {
 	return zv
 }
 
-func Min[T constraints.Ordered](vs ...T) T {
+func Min[T cmp.Ordered](vs ...T) T {
 	var zv T
 	for i, v := range vs {
 		if v < zv || i == 0 {

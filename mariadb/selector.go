@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pedidopago/go-common/mariadb/errors"
 	"github.com/pedidopago/go-common/slice"
-	"golang.org/x/exp/constraints"
+	"cmp"
 )
 
 type Selector interface {
@@ -63,7 +63,7 @@ func SelectOne[T any](ctx context.Context, db sqlx.ExtContext, input Selector) (
 	return p0, nil
 }
 
-func SelectCount[T constraints.Ordered](ctx context.Context, db sqlx.QueryerContext, input Selector) (T, error) {
+func SelectCount[T cmp.Ordered](ctx context.Context, db sqlx.QueryerContext, input Selector) (T, error) {
 	var zv T
 	if err := input.ValidateFields(); err != nil {
 		return zv, err
