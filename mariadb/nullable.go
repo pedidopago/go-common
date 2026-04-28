@@ -4,8 +4,63 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
+	"strconv"
 	"time"
+	"unicode/utf8"
 )
+
+var (
+	jsonNull  = []byte("null")
+	jsonTrue  = []byte("true")
+	jsonFalse = []byte("false")
+)
+
+const jsonHex = "0123456789abcdef"
+
+func appendJSONString(dst []byte, s string) []byte {
+	dst = append(dst, '"')
+	start := 0
+	for i := 0; i < len(s); {
+		c := s[i]
+		if c >= utf8.RuneSelf {
+			r, size := utf8.DecodeRuneInString(s[i:])
+			if r != utf8.RuneError && r != ' ' && r != ' ' {
+				i += size
+				continue
+			}
+			dst = append(dst, s[start:i]...)
+			dst = append(dst, '\\', 'u')
+			dst = append(dst, jsonHex[(r>>12)&0xf], jsonHex[(r>>8)&0xf], jsonHex[(r>>4)&0xf], jsonHex[r&0xf])
+			i += size
+			start = i
+			continue
+		}
+		if c >= 0x20 && c != '"' && c != '\\' && c != '<' && c != '>' && c != '&' {
+			i++
+			continue
+		}
+		dst = append(dst, s[start:i]...)
+		switch c {
+		case '"':
+			dst = append(dst, '\\', '"')
+		case '\\':
+			dst = append(dst, '\\', '\\')
+		case '\n':
+			dst = append(dst, '\\', 'n')
+		case '\r':
+			dst = append(dst, '\\', 'r')
+		case '\t':
+			dst = append(dst, '\\', 't')
+		default:
+			dst = append(dst, '\\', 'u', '0', '0', jsonHex[c>>4], jsonHex[c&0xf])
+		}
+		i++
+		start = i
+	}
+	dst = append(dst, s[start:]...)
+	dst = append(dst, '"')
+	return dst
+}
 
 type OpenAPISchemaObject interface {
 	SetType(v string)
@@ -43,9 +98,9 @@ func (ns NullInt64) Value() (driver.Value, error) {
 
 func (ns NullInt64) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
-		return []byte("null"), nil
+		return jsonNull, nil
 	}
-	return json.Marshal(ns.Int64)
+	return strconv.AppendInt(make([]byte, 0, 20), ns.Int64, 10), nil
 }
 
 func (ns *NullInt64) UnmarshalJSON(data []byte) error {
@@ -93,9 +148,9 @@ func (ns NullString) Value() (driver.Value, error) {
 
 func (ns NullString) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
-		return []byte("null"), nil
+		return jsonNull, nil
 	}
-	return json.Marshal(ns.String)
+	return appendJSONString(make([]byte, 0, len(ns.String)+2), ns.String), nil
 }
 
 func (ns *NullString) UnmarshalJSON(data []byte) error {
@@ -149,9 +204,9 @@ func (ns NullTime) Value() (driver.Value, error) {
 
 func (ns NullTime) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
-		return []byte("null"), nil
+		return jsonNull, nil
 	}
-	return json.Marshal(ns.Time)
+	return ns.Time.MarshalJSON()
 }
 
 func (ns *NullTime) UnmarshalJSON(data []byte) error {
@@ -214,9 +269,12 @@ func (ns NullBool) Value() (driver.Value, error) {
 
 func (ns NullBool) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
-		return []byte("null"), nil
+		return jsonNull, nil
 	}
-	return json.Marshal(ns.Bool)
+	if ns.Bool {
+		return jsonTrue, nil
+	}
+	return jsonFalse, nil
 }
 
 func (ns *NullBool) UnmarshalJSON(data []byte) error {
