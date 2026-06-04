@@ -310,3 +310,45 @@ func (ns NullBool) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetType("boolean")
 	schema.SetDescription("nullable boolean")
 }
+
+// helper methods
+
+func FromString(v string, zeroIsNil bool) NullString {
+	if zeroIsNil && v == "" {
+		return NullString{}
+	}
+	return NullString{
+		String: v,
+		Valid:  true,
+	}
+}
+
+func FromTime(t time.Time, zeroIsNil bool) NullTime {
+	if zeroIsNil && t.IsZero() {
+		return NullTime{}
+	}
+	return NullTime{
+		Time:  t,
+		Valid: true,
+	}
+}
+
+func FromBool(b bool, zeroIsNil bool) NullBool {
+	if zeroIsNil && !b {
+		return NullBool{}
+	}
+	return NullBool{
+		Bool:  b,
+		Valid: true,
+	}
+}
+
+func FromInt64(i int64, zeroIsNil bool) NullInt64 {
+	if zeroIsNil && i == 0 {
+		return NullInt64{}
+	}
+	return NullInt64{
+		Int64: i,
+		Valid: true,
+	}
+}
