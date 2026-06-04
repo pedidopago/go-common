@@ -112,6 +112,11 @@ func (ns *NullInt64) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &ns.Int64)
 }
 
+func (ns *NullInt64) Set(v int64) { ns.Int64 = v; ns.Valid = true }
+func (ns *NullInt64) Clear()      { ns.Int64 = 0; ns.Valid = false }
+
+func (ns NullInt64) IsZero() bool { return !ns.Valid }
+
 func (ns NullInt64) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetType("integer")
 	schema.SetFormat("int64")
@@ -161,6 +166,11 @@ func (ns *NullString) UnmarshalJSON(data []byte) error {
 	ns.Valid = true
 	return json.Unmarshal(data, &ns.String)
 }
+
+func (ns *NullString) Set(v string) { ns.String = v; ns.Valid = true }
+func (ns *NullString) Clear()       { ns.String = ""; ns.Valid = false }
+
+func (ns NullString) IsZero() bool { return !ns.Valid }
 
 func (ns NullString) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetType("string")
@@ -217,6 +227,11 @@ func (ns *NullTime) UnmarshalJSON(data []byte) error {
 	ns.Valid = true
 	return json.Unmarshal(data, &ns.Time)
 }
+
+func (ns *NullTime) Set(v time.Time) { ns.Time = v; ns.Valid = true }
+func (ns *NullTime) Clear()          { ns.Time = time.Time{}; ns.Valid = false }
+
+func (ns NullTime) IsZero() bool { return !ns.Valid }
 
 func (ns NullTime) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetType("string")
@@ -285,6 +300,11 @@ func (ns *NullBool) UnmarshalJSON(data []byte) error {
 	ns.Valid = true
 	return json.Unmarshal(data, &ns.Bool)
 }
+
+func (ns *NullBool) Set(v bool) { ns.Bool = v; ns.Valid = true }
+func (ns *NullBool) Clear()     { ns.Bool = false; ns.Valid = false }
+
+func (ns NullBool) IsZero() bool { return !ns.Valid }
 
 func (ns NullBool) HydrateSchemaObject(schema OpenAPISchemaObject) {
 	schema.SetType("boolean")
