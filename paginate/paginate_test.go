@@ -101,7 +101,7 @@ func TestPPS8997_NegativeLimitDoesNotPanic(t *testing.T) {
 		totalItems int64
 	}{
 		{name: "negative limit with no items", page: 1, limit: -5, totalItems: 0},
-		{name: "negative limit with one item", page: 1, limit: -1, totalItems: 0},
+		{name: "limit of minus one", page: 1, limit: -1, totalItems: 0},
 		{name: "negative page and negative limit", page: -3, limit: -10, totalItems: 0},
 	}
 
@@ -123,13 +123,14 @@ func TestPPS8997_NegativeLimitDoesNotPanic(t *testing.T) {
 // `ulimit -v` guard to see it red without taking the machine down.
 func TestPPS8997_NegativeLimitTerminates(t *testing.T) {
 	testCases := []struct {
-		name       string
-		limit      int64
-		totalItems int64
+		name         string
+		limit        int64
+		totalItems   int64
+		wantLastPage int64
 	}{
-		{name: "negative limit smaller than total", limit: -5, totalItems: 100},
-		{name: "negative limit with remainder", limit: -5, totalItems: 102},
-		{name: "negative limit with large total", limit: -1, totalItems: 1000},
+		{name: "negative limit smaller than total", limit: -5, totalItems: 100, wantLastPage: 10},
+		{name: "negative limit with remainder", limit: -5, totalItems: 102, wantLastPage: 11},
+		{name: "negative limit with large total", limit: -1, totalItems: 1000, wantLastPage: 100},
 	}
 
 	for _, tc := range testCases {
@@ -137,7 +138,8 @@ func TestPPS8997_NegativeLimitTerminates(t *testing.T) {
 			got := NewPagination(1, tc.limit, tc.totalItems)
 			require.NotNil(t, got)
 			assert.Equal(t, int64(defaultItemsPerPage), got.ItemsPerPage)
-			assert.Len(t, got.NearPages, int(got.LastPage))
+			assert.Equal(t, tc.wantLastPage, got.LastPage)
+			assert.Len(t, got.NearPages, int(tc.wantLastPage))
 		})
 	}
 }
@@ -181,7 +183,7 @@ func TestPPS8997_CapsNearPages(t *testing.T) {
 		assert.Equal(t, int64(maxNearPages), got.NearPages[len(got.NearPages)-1])
 	})
 
-	t.Run("below the cap nothing is truncated", func(t *testing.T) {
+	t.Run("exactly at the cap nothing is truncated", func(t *testing.T) {
 		got := NewPagination(1, 1, maxNearPages)
 		require.NotNil(t, got)
 		assert.Len(t, got.NearPages, maxNearPages)
