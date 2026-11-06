@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/pedidopago/go-common/errorcode"
+	errorcode "github.com/pedidopago/go-common/errorcode/core"
 )
 
 var (
