@@ -7,16 +7,17 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
+	"github.com/pedidopago/go-common/errorcode/core"
 )
 
-type Error error
+type Error = core.Error
 
 var (
 	ErrBadRequest                    Error = fmt.Errorf("bad request")
 	ErrUnauthorized                  Error = fmt.Errorf("unauthorized")
 	ErrPaymentRequired               Error = fmt.Errorf("payment required")
 	ErrForbidden                     Error = fmt.Errorf("forbidden")
-	ErrNotFound                      Error = fmt.Errorf("not found")
+	ErrNotFound                      Error = core.ErrNotFound
 	ErrMethodNotAllowed              Error = fmt.Errorf("method not allowed")
 	ErrNotAcceptable                 Error = fmt.Errorf("not acceptable")
 	ErrProxyAuthRequired             Error = fmt.Errorf("proxy authentication required")
@@ -41,7 +42,7 @@ var (
 	ErrTooManyRequests               Error = fmt.Errorf("too many requests")
 	ErrRequestHeaderFieldsTooLarge   Error = fmt.Errorf("request header fields too large")
 	ErrUnavailableForLegalReasons    Error = fmt.Errorf("unavailable for legal reasons")
-	ErrInternalServerError           Error = fmt.Errorf("internal server error")
+	ErrInternalServerError           Error = core.ErrInternalServerError
 	ErrNotImplemented                Error = fmt.Errorf("not implemented")
 	ErrBadGateway                    Error = fmt.Errorf("bad gateway")
 	ErrServiceUnavailable            Error = fmt.Errorf("service unavailable")
